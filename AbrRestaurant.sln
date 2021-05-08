@@ -7,9 +7,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F3E4B130-F8F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{18699219-604F-448F-854C-B2032851C794}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbrRestaurant.MenuApi", "AbrRestaurant.MenuApi\AbrRestaurant.MenuApi.csproj", "{051EF7A7-E3CB-4839-92DF-DBF83156508E}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{051EF7A7-E3CB-4839-92DF-DBF83156508E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{051EF7A7-E3CB-4839-92DF-DBF83156508E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{051EF7A7-E3CB-4839-92DF-DBF83156508E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{051EF7A7-E3CB-4839-92DF-DBF83156508E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{051EF7A7-E3CB-4839-92DF-DBF83156508E} = {F3E4B130-F8FB-4BEF-A1C4-36E2F298B07F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {01A314E8-53F8-4211-941A-349D504EA26C}
