@@ -2,9 +2,8 @@
 
 namespace AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu.Requests
 {
-    public class CreateMenuItemRequest
+    public class CreateMenuRequestV1
     {
-        [JsonIgnore]
         public string Name { get; set; }
         public string Description { get; set; }
 
