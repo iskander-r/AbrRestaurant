@@ -1,8 +1,7 @@
-﻿using AbrRestaurant.MenuApi.Contracts.V1;
-using AbrRestaurant.MenuApi.Data;
-using AbrRestaurant.MenuApi.Data.Domain;
+﻿using AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu;
+using AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu.Requests;
+using AbrRestaurant.MenuApi.Helpers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 
@@ -11,28 +10,28 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
     [ApiController]
     public class MenuController : ControllerBase
     {
-        [Obsolete("Will be moved to domain handler later. For testing purposes only.")]
-        private readonly ApplicationDbContext _applicationDbContext;
-        public MenuController(ApplicationDbContext applicationDbContext)
+        public MenuController()
         {
-            _applicationDbContext = applicationDbContext;
         }
 
 
         [HttpGet(ApiRoutesV1.MenuItems.GetAll)]
         public async Task<IActionResult> GetAll()
         {
-            var query = await _applicationDbContext.Meals.ToListAsync();
-            return Ok(query);
+            throw new NotImplementedException();
         }
 
         [HttpPost(ApiRoutesV1.MenuItems.Post)]
-        public async Task<IActionResult> Post(Meal meal)
+        public async Task<IActionResult> Post(
+            [FromBody] CreateMenuItemRequest model)
         {
-            _applicationDbContext.Meals.Add(meal);
-            await _applicationDbContext.SaveChangesAsync();
+            var tempId = Guid.NewGuid();
 
-            return Ok(meal);
+            var resourceLocation = 
+                ResourceLocationProvider.GetLocationUri(
+                    ApiRoutesV1.MenuItems.Get, tempId, HttpContext);
+
+            return Created(resourceLocation, null);
         }
     }
 }
