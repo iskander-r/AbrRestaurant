@@ -9,8 +9,12 @@ namespace AbrRestaurant.MenuApi.Installer
             IServiceCollection serviceCollection, 
             IConfiguration configuration)
         {
-            serviceCollection.AddControllers();
-            serviceCollection.AddMvc();
+            serviceCollection
+                .AddControllers();
+
+            serviceCollection
+                .AddMvc()
+                .AddNewtonsoftJson();
         }
     }
 }

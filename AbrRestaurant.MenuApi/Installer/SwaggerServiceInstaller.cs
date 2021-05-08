@@ -15,6 +15,8 @@ namespace AbrRestaurant.MenuApi.Installer
                 var openApiInfo = new OpenApiInfo() { Title = "AbrRestaurant.MenuApi", Version = "v1" };
                 option.SwaggerDoc(openApiInfo.Version, openApiInfo);
             });
+
+            serviceCollection.AddSwaggerGenNewtonsoftSupport();
         }
     }
 }
