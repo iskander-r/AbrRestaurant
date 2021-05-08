@@ -1,7 +1,9 @@
+using AbrRestaurant.MenuApi.Data;
 using AbrRestaurant.MenuApi.Installer;
 using AbrRestaurant.MenuApi.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,6 +29,13 @@ namespace AbrRestaurant.MenuApi
             var currentAssembly = Assembly.GetExecutingAssembly();
             
             services.InstallServicesFromAssembly(_configuration, currentAssembly);
+
+            // For developing and testing purposes enabled automatic migrations here. Must be removed later.
+            var applicationDbContext = services.BuildServiceProvider()
+                .GetRequiredService<ApplicationDbContext>();
+
+            applicationDbContext.Database.EnsureCreated();
+            applicationDbContext.Database.Migrate();
         }
 
 
