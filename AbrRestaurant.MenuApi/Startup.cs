@@ -34,6 +34,7 @@ namespace AbrRestaurant.MenuApi
             var applicationDbContext = services.BuildServiceProvider()
                 .GetRequiredService<ApplicationDbContext>();
 
+            applicationDbContext.Database.EnsureDeleted();
             applicationDbContext.Database.EnsureCreated();
             applicationDbContext.Database.Migrate();
         }

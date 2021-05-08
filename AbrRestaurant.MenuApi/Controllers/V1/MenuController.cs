@@ -1,5 +1,6 @@
 ﻿using AbrRestaurant.MenuApi.Contracts.V1;
 using AbrRestaurant.MenuApi.Data;
+using AbrRestaurant.MenuApi.Data.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -23,6 +24,15 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
         {
             var query = await _applicationDbContext.Meals.ToListAsync();
             return Ok(query);
+        }
+
+        [HttpPost(ApiRoutesV1.MenuItems.Post)]
+        public async Task<IActionResult> Post(Meal meal)
+        {
+            _applicationDbContext.Meals.Add(meal);
+            await _applicationDbContext.SaveChangesAsync();
+
+            return Ok(meal);
         }
     }
 }

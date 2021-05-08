@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AbrRestaurant.MenuApi.Data
 {
@@ -28,6 +30,20 @@ namespace AbrRestaurant.MenuApi.Data
             ApplyTrackingMetadataOnAddedEntities();
 
             return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            ApplyTrackingMetadataOnAddedEntities();
+
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        {
+            ApplyTrackingMetadataOnAddedEntities();
+
+            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
 
         private void ApplyTrackingMetadataOnAddedEntities()
@@ -77,7 +93,10 @@ namespace AbrRestaurant.MenuApi.Data
         public static void ApplyTrackableConfiguration<TEntity>(this EntityTypeBuilder<TEntity> builder) 
             where TEntity : TrackableEntity
         {
-            builder.Property(p => p.RowVersion).IsRowVersion();
+            // Has no effect, need to fix. Tried to implement IsRowVersion as concurrency token, but
+            // found out that PostgreSQL doesn't support this feature.
+
+            // builder.UseXminAsConcurrencyToken();
         }
     }
 

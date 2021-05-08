@@ -8,6 +8,9 @@
         {
             private const string CONTROLLER_PATH = "menu";
             public const string GetAll = PATH_ROOT + "/v" + API_VERSION + "/" + CONTROLLER_PATH; 
+            public const string Post = PATH_ROOT + "/v" + API_VERSION + "/" + CONTROLLER_PATH;
         }
+
+
     }
 }
