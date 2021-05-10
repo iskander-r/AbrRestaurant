@@ -1,7 +1,7 @@
 using AbrRestaurant.Application;
 using AbrRestaurant.Infrastructure.Installer;
+using AbrRestaurant.Infrastructure.Options;
 using AbrRestaurant.MenuApi.Data;
-using AbrRestaurant.MenuApi.Options;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -22,7 +22,6 @@ namespace AbrRestaurant.MenuApi
         }
 
         private readonly IConfiguration _configuration;
-
 
         public void ConfigureServices(
             IServiceCollection services)
@@ -72,6 +71,8 @@ namespace AbrRestaurant.MenuApi
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseAuthentication();
 
             app.UseRouting();
             app.UseAuthorization();

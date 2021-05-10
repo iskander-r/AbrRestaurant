@@ -1,4 +1,4 @@
-﻿namespace AbrRestaurant.MenuApi.Options
+﻿namespace AbrRestaurant.Infrastructure.Options
 {
     public class SwaggerOptions
     {
