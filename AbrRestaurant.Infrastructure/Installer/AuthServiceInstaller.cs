@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace AbrRestaurant.Infrastructure.Installer
@@ -38,6 +39,8 @@ namespace AbrRestaurant.Infrastructure.Installer
                         ValidateLifetime = true
                     };
                 });
+
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
         }
     }
 }

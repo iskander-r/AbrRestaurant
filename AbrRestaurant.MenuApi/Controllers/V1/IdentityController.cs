@@ -45,12 +45,24 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
             return Ok(new AuthSuccessResponse { Token = authResposne.Token });
         }
 
-        
-        [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> SignOut()
-        {
 
+        [HttpPost(IdentityResourceRoutesV1.IdentityResource.SignOut)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public new async Task<IActionResult> SignOut()
+        {
+            await _identityService.SignOutAsync();
+            return Ok();
+        }
+
+
+        [HttpPost(IdentityResourceRoutesV1.IdentityResource.ChangePassword)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> ChangePassword(UserChangePasswordRequest model)
+        {
+            var result = await _identityService
+                .ChangePasswordAsync(model.CurrentPassword, model.NewPassword);
+
+            return Ok(result);
         }
     }
 }

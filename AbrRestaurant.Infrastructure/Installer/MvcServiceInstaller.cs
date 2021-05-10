@@ -21,10 +21,10 @@ namespace AbrRestaurant.Infrastructure.Installer
                 .AddHttpContextAccessor();
 
             serviceCollection
-                .AddScoped<IIdentityService, IdentityService>();
+                .AddTransient<IIdentityService, IdentityService>();
 
             serviceCollection
-                .AddScoped<ICurrentApplicationUserProvider, CurrentApplicationUserProvider>();
+                .AddTransient<ICurrentApplicationUserProvider, CurrentApplicationUserProvider>();
         }
     }
 }

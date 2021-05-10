@@ -3,6 +3,7 @@ using AbrRestaurant.Infrastructure.Installer;
 using AbrRestaurant.Infrastructure.Options;
 using AbrRestaurant.Infrastructure.Persistence;
 using AbrRestaurant.MenuApi.Data;
+using AbrRestaurant.MenuApi.Middlewares;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,25 +34,26 @@ namespace AbrRestaurant.MenuApi
             InstallMediator(services);
 
             // For developing and testing purposes enabled automatic migrations here. Must be removed later.
-            var applicationDbContext = services.BuildServiceProvider()
-                .GetRequiredService<AbrApplicationDbContext>();
+            //var applicationDbContext = services.BuildServiceProvider()
+            //    .GetRequiredService<AbrApplicationDbContext>();
 
-            var identityDbContext = services.BuildServiceProvider()
-                .GetRequiredService<AbrIdentityDbContext>();
+            //var identityDbContext = services.BuildServiceProvider()
+            //    .GetRequiredService<AbrIdentityDbContext>();
 
-            applicationDbContext.Database.EnsureDeleted();
-            applicationDbContext.Database.EnsureCreated();
-            applicationDbContext.Database.Migrate();
+            //applicationDbContext.Database.EnsureDeleted();
+            //applicationDbContext.Database.EnsureCreated();
+            //applicationDbContext.Database.Migrate();
 
-            identityDbContext.Database.EnsureDeleted();
-            identityDbContext.Database.EnsureCreated();
-            identityDbContext.Database.Migrate();
+            //identityDbContext.Database.EnsureDeleted();
+            //identityDbContext.Database.EnsureCreated();
+            //identityDbContext.Database.Migrate();
         }
 
         private void InstallMediator(IServiceCollection serivceCollection)
         {
             var applicationAssembly = Assembly.GetAssembly(typeof(IApplicationAssemblyMarker));
             serivceCollection.AddMediatR(applicationAssembly);
+            serivceCollection.AddTransient<SignedOutCheckMiddleware>();
         }
 
 
@@ -85,10 +87,12 @@ namespace AbrRestaurant.MenuApi
             app.UseRouting();
             app.UseAuthorization();
 
+            app.UseSignedOutCheckMiddleware();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
+            });            
         }
     }
 }

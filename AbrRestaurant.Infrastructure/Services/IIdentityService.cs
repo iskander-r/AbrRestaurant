@@ -3,6 +3,7 @@ using AbrRestaurant.Infrastructure.Models;
 using AbrRestaurant.Infrastructure.Options;
 using AbrRestaurant.Infrastructure.Utils;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -18,20 +19,23 @@ namespace AbrRestaurant.Infrastructure.Services
     {
         Task<AuthenticationResult> SignUpAsync(string email, string password);
         Task<AuthenticationResult> SignInAsync(string email, string password);
-        Task SignOutAsync(CurrentUserIdentity currentUser);
-        Task<ChangePasswordResult> ChangePasswordAsync(CurrentUserIdentity currentUser, string currentPassword, string newPassword);
+        Task SignOutAsync();
+        Task<ChangePasswordResult> ChangePasswordAsync(string currentPassword, string newPassword);
     }
 
     public class IdentityService : IIdentityService
     {
         private readonly UserManager<AbrApplicationUser> _userManager;
         private readonly JwtConfigurationOptions _jwtConfigurationOptions;
+        private readonly ICurrentApplicationUserProvider _currentUserProvider;
         public IdentityService(
             UserManager<AbrApplicationUser> userManager, 
-            JwtConfigurationOptions jwtConfigurationOptions)
+            JwtConfigurationOptions jwtConfigurationOptions,
+            ICurrentApplicationUserProvider currentUserProvider)
         {
             _userManager = userManager;
             _jwtConfigurationOptions = jwtConfigurationOptions;
+            _currentUserProvider = currentUserProvider;
         }
 
  
@@ -103,18 +107,22 @@ namespace AbrRestaurant.Infrastructure.Services
             return AuthenticationResult.GetSuccededAuthentication(tokenHandler.WriteToken(token));
         }
 
-        public async Task SignOutAsync(
-            CurrentUserIdentity currentUser)
+        public async Task SignOutAsync()
         {
-            var applicationUser = await _userManager.FindByEmailAsync(currentUser.Email);
+            var applicationUser = await _userManager
+                .FindByEmailAsync(_currentUserProvider.GetCurrentUser().Email);
+
+            if (applicationUser == null) return;
+
             applicationUser.LastSignOutMomentTimestamp = DateTimeExtensions.NowUtcToUnixTimestamp();
 
             await _userManager.UpdateAsync(applicationUser);
         }
 
         public async Task<ChangePasswordResult> ChangePasswordAsync(
-            CurrentUserIdentity currentUser, string currentPassword, string newPassword)
+            string currentPassword, string newPassword)
         {
+            var currentUser = _currentUserProvider.GetCurrentUser();
             var applicationUser = await _userManager.FindByEmailAsync(currentUser.Email);
 
             var changePasswordResult = await _userManager
@@ -126,7 +134,7 @@ namespace AbrRestaurant.Infrastructure.Services
                     "Не удалось сменить пароль, обратитесь в службу технической поддержки");
             }
 
-            await SignOutAsync(currentUser);
+            await SignOutAsync();
             return ChangePasswordResult.GetSuccededPasswordChange();
         }
     }

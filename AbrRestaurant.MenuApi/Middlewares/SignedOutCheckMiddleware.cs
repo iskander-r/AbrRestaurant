@@ -30,8 +30,14 @@ namespace AbrRestaurant.MenuApi.Middlewares
 
             var controllerActionDescriptor = context
                 .GetEndpoint()
-                .Metadata
-                .GetMetadata<ControllerActionDescriptor>();
+                ?.Metadata
+                ?.GetMetadata<ControllerActionDescriptor>();
+
+            if (controllerActionDescriptor == null)
+            { 
+                await next.Invoke(context);
+                return;
+            }
 
             var isAuthorizationRequiredEndpoint = 
                 controllerActionDescriptor.MethodInfo.GetCustomAttributes(false)
@@ -40,11 +46,13 @@ namespace AbrRestaurant.MenuApi.Middlewares
             if (!isAuthorizationRequiredEndpoint)
             {
                 await next.Invoke(context);
+                return;
             }
 
             if(_currentUser.IsAnonymousUser)
             {
                 CancelProcessingPipelineAs401(context);
+                return;
             }
 
             var currentUserFromDb = await _userManager
@@ -54,10 +62,12 @@ namespace AbrRestaurant.MenuApi.Middlewares
                 currentUserFromDb.LastSignOutMomentTimestamp > _currentUser.IssuedMoment)
             {
                 CancelProcessingPipelineAs401(context);
+                return;
             }
             else
             {
                 await next.Invoke(context);
+                return;
             }
         }
 
