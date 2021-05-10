@@ -1,6 +1,7 @@
 using AbrRestaurant.Application;
 using AbrRestaurant.Infrastructure.Installer;
 using AbrRestaurant.Infrastructure.Options;
+using AbrRestaurant.Infrastructure.Persistence;
 using AbrRestaurant.MenuApi.Data;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -35,9 +36,16 @@ namespace AbrRestaurant.MenuApi
             var applicationDbContext = services.BuildServiceProvider()
                 .GetRequiredService<AbrApplicationDbContext>();
 
+            var identityDbContext = services.BuildServiceProvider()
+                .GetRequiredService<AbrIdentityDbContext>();
+
             applicationDbContext.Database.EnsureDeleted();
             applicationDbContext.Database.EnsureCreated();
             applicationDbContext.Database.Migrate();
+
+            identityDbContext.Database.EnsureDeleted();
+            identityDbContext.Database.EnsureCreated();
+            identityDbContext.Database.Migrate();
         }
 
         private void InstallMediator(IServiceCollection serivceCollection)

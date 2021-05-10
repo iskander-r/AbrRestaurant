@@ -21,10 +21,10 @@ namespace AbrRestaurant.Infrastructure.Services
 
     public class IdentityService : IIdentityService
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<AbrApplicationUser> _userManager;
         private readonly JwtConfigurationOptions _jwtConfigurationOptions;
         public IdentityService(
-            UserManager<IdentityUser> userManager, 
+            UserManager<AbrApplicationUser> userManager, 
             JwtConfigurationOptions jwtConfigurationOptions)
         {
             _userManager = userManager;
