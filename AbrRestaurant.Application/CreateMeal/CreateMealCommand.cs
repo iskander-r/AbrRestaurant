@@ -1,16 +1,15 @@
 ﻿using AbrRestaurant.Application.Generics;
-using AbrRestaurant.Domain.Entities;
+using AbrRestaurant.Application.Mappers;
 using AbrRestaurant.Domain.Errors;
 using AbrRestaurant.Infrastructure.Utils;
 using AbrRestaurant.MenuApi.Data;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AbrRestaurant.Application.CreateMealCommand
+namespace AbrRestaurant.Application.CreateMeal
 {
     /// <summary>
     /// Command to create a meal in them menu.
@@ -60,7 +59,7 @@ namespace AbrRestaurant.Application.CreateMealCommand
         }
     }
 
-    class CreateMealCommandValidator : AbstractValidator<CreateMealCommand>
+    public class CreateMealCommandValidator : AbstractValidator<CreateMealCommand>
     {
         private readonly ApplicationDbContext _applicationDbContext;
         public CreateMealCommandValidator(
@@ -91,7 +90,7 @@ namespace AbrRestaurant.Application.CreateMealCommand
             return allNamesUnique;
         }
 
-
+        // TODO: Refactor to seperate Rule class / Factory later
         private bool MealPriceMustBeInSpecifiedRange(decimal price)
         {
             decimal mealMinPrice = 1, mealMaxPrice = 100_000;
@@ -120,31 +119,11 @@ namespace AbrRestaurant.Application.CreateMealCommand
             if (!validationResult.IsValid)
                 return validationResult.ToDomainError();
 
-            var meal = Map(request);
+            var meal = request.MapToMeal();
             _applicationDbContext.Meals.Add(meal);
 
             await _applicationDbContext.SaveChangesAsync();
-            return CreateResponse(meal);
+            return meal.CreateResponse();
         }
-
-        private Meal Map(CreateMealCommand request)
-        {
-            return new Meal()
-            {
-                Name = request.Name,
-                Description = GetDescriptionOrDefault(request.Description),
-                PictureContent = request.PictureAsBase64?.ToByteArray() ?? null,
-                Price = request.Price
-            };
-        }
-
-        private CreateMealCommandResponse CreateResponse(Meal meal)
-        {
-            return new CreateMealCommandResponse(
-                meal.Id.ToString(), meal.Name, meal.Description, string.Empty, meal.Price);
-        }
-
-        private string GetDescriptionOrDefault(string description) =>
-            string.IsNullOrWhiteSpace(description) ? "Описание для блюда еще не добавлено" : description;
     }
 }

@@ -11,7 +11,5 @@
             public const string Get = PATH_ROOT + "/v" + API_VERSION + "/" + CONTROLLER_PATH + "/" + "{id}";
             public const string Post = PATH_ROOT + "/v" + API_VERSION + "/" + CONTROLLER_PATH;
         }
-
-
     }
 }

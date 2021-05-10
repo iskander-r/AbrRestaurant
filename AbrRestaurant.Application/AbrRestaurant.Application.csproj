@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="GetMealQuery\" />
+    <Folder Include="GetMeal\" />
   </ItemGroup>
 
   <ItemGroup>
