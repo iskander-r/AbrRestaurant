@@ -93,7 +93,7 @@ namespace AbrRestaurant.Application.UpdateMeal
         {
             mealToUpdate.Name = updatedModel.Name;
             mealToUpdate.Description = updatedModel.Name;
-            mealToUpdate.PictureContent = updatedModel.PictureAsBase64?.ToByteArray() ?? null,
+            mealToUpdate.PictureContent = updatedModel.PictureAsBase64?.ToByteArray() ?? null;
             mealToUpdate.Price = updatedModel.Price;
         }
     }

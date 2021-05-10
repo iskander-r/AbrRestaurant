@@ -1,4 +1,4 @@
-﻿using AbrRestaurant.Application.CreateMealCommand;
+﻿using AbrRestaurant.Application.CreateMeal;
 using AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu.Requests;
 using AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu.Responses;
 
