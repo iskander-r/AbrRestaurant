@@ -9,6 +9,7 @@
             private const string CONTROLLER_PATH = "menu";
             public const string GetAll = PATH_ROOT + "/v" + API_VERSION + "/" + CONTROLLER_PATH; 
             public const string Get = PATH_ROOT + "/v" + API_VERSION + "/" + CONTROLLER_PATH + "/" + "{id}";
+            public const string Put = PATH_ROOT + "/v" + API_VERSION + "/" + CONTROLLER_PATH + "/" + "{id}";
             public const string Post = PATH_ROOT + "/v" + API_VERSION + "/" + CONTROLLER_PATH;
         }
     }

@@ -2,7 +2,7 @@
 
 namespace AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu.Requests
 {
-    public class GetMenuByIdRequestV1
+    public class PutMenuRequestV1 : PostMenuRequestV1
     {
         [Required]
         public int Id { get; set; }

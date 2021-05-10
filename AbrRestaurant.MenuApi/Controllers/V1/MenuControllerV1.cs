@@ -3,8 +3,8 @@ using AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu.Mappers;
 using AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu.Requests;
 using AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu.Responses;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
+
 
 namespace AbrRestaurant.MenuApi.Controllers.V1
 {
@@ -15,27 +15,52 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
         public async Task<ActionResult<MenuResponseV1>> Get(
             [FromRoute] GetMenuByIdRequestV1 model)
         {
-            throw new NotImplementedException();
+            var query = model.ToApplicationCommand();
+            var response = await _mediator.Send(query);
+
+            if (response.CompletedSuccessfully)
+                return Ok(response.Response.ToOuterContractModel());
+
+            return ProcessDomainErrorToApiResponse(response.Error);
         }
 
 
         [HttpGet(MenuResourceRoutesV1.MenuResource.GetAll)]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(GetAllMenuRequestV1 model)
         {
-            throw new NotImplementedException();
+            var query = model.ToApplicationCommand();
+            var response = await _mediator.Send(query);
+
+            return Ok(response);
         }
+
 
         [HttpPost(MenuResourceRoutesV1.MenuResource.Post)]
         public async Task<IActionResult> Post(
             [FromBody] PostMenuRequestV1 model)
         {
             var command = model.ToApplicationCommand();
-            var commandResponse = await _mediator.Send(command);
+            var response = await _mediator.Send(command);
 
-            if (commandResponse.CompletedSuccessfully)
-                return Ok(commandResponse.Response.ToOuterContractModel());
+            if (response.CompletedSuccessfully)
+                return Ok(response.Response.ToOuterContractModel());
 
-            return ProcessDomainErrorToApiResponse(commandResponse.Error);
+            return ProcessDomainErrorToApiResponse(response.Error);
+        }
+
+
+        [HttpPut(MenuResourceRoutesV1.MenuResource.Put)]
+        public async Task<IActionResult> Put(
+            [FromBody] PutMenuRequestV1 model)
+        {
+            var command = model.ToApplicationCommand();
+
+            var response = await _mediator.Send(command);
+
+            if (response.CompletedSuccessfully)
+                return Ok(response.Response.ToOuterContractModel());
+
+            return ProcessDomainErrorToApiResponse(response.Error);
         }
     }
 }
