@@ -2,6 +2,7 @@
 using AbrRestaurant.MenuApi.Contracts.V1.Resources.Identity;
 using AbrRestaurant.MenuApi.Contracts.V1.Resources.Identity.Requests;
 using AbrRestaurant.MenuApi.Contracts.V1.Resources.Identity.Responses;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -42,6 +43,14 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
                 return BadRequest(new AuthFailedResponse(authResposne.Errors));
 
             return Ok(new AuthSuccessResponse { Token = authResposne.Token });
+        }
+
+        
+        [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> SignOut()
+        {
+
         }
     }
 }

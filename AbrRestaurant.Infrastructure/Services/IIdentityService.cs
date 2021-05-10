@@ -1,6 +1,7 @@
 ﻿using AbrRestaurant.Infrastructure.Identity;
 using AbrRestaurant.Infrastructure.Models;
 using AbrRestaurant.Infrastructure.Options;
+using AbrRestaurant.Infrastructure.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -17,6 +18,8 @@ namespace AbrRestaurant.Infrastructure.Services
     {
         Task<AuthenticationResult> SignUpAsync(string email, string password);
         Task<AuthenticationResult> SignInAsync(string email, string password);
+        Task SignOutAsync(CurrentUserIdentity currentUser);
+        Task<ChangePasswordResult> ChangePasswordAsync(CurrentUserIdentity currentUser, string currentPassword, string newPassword);
     }
 
     public class IdentityService : IIdentityService
@@ -31,8 +34,9 @@ namespace AbrRestaurant.Infrastructure.Services
             _jwtConfigurationOptions = jwtConfigurationOptions;
         }
 
-
-        public async Task<AuthenticationResult> SignInAsync(string email, string password)
+ 
+        public async Task<AuthenticationResult> SignInAsync(
+            string email, string password)
         {
             var existingUser = await _userManager.FindByEmailAsync(email);
 
@@ -49,7 +53,9 @@ namespace AbrRestaurant.Infrastructure.Services
             return AuthenticateUser(existingUser);
         }
 
-        public async Task<AuthenticationResult> SignUpAsync(string email, string password)
+
+        public async Task<AuthenticationResult> SignUpAsync(
+            string email, string password)
         {
             var existingUser = await _userManager.FindByEmailAsync(email);
 
@@ -72,7 +78,8 @@ namespace AbrRestaurant.Infrastructure.Services
             return AuthenticateUser(applicationUser);
         }
 
-        private AuthenticationResult AuthenticateUser(AbrApplicationUser user)
+        private AuthenticationResult AuthenticateUser(
+            AbrApplicationUser user)
         {
             // TODO: Decompose to at least 2 classes - JwtGeneratorService, JwtLifetimeService
 
@@ -85,7 +92,8 @@ namespace AbrRestaurant.Infrastructure.Services
                 {
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim("id", user.Id),
-                    new Claim("email", user.Email)
+                    new Claim("email", user.Email),
+                    new Claim("issued_moment", DateTimeExtensions.NowUtcToUnixTimestamp().ToString())
                 }),
                 Expires = DateTime.UtcNow.AddHours(24),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
@@ -93,6 +101,33 @@ namespace AbrRestaurant.Infrastructure.Services
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return AuthenticationResult.GetSuccededAuthentication(tokenHandler.WriteToken(token));
+        }
+
+        public async Task SignOutAsync(
+            CurrentUserIdentity currentUser)
+        {
+            var applicationUser = await _userManager.FindByEmailAsync(currentUser.Email);
+            applicationUser.LastSignOutMomentTimestamp = DateTimeExtensions.NowUtcToUnixTimestamp();
+
+            await _userManager.UpdateAsync(applicationUser);
+        }
+
+        public async Task<ChangePasswordResult> ChangePasswordAsync(
+            CurrentUserIdentity currentUser, string currentPassword, string newPassword)
+        {
+            var applicationUser = await _userManager.FindByEmailAsync(currentUser.Email);
+
+            var changePasswordResult = await _userManager
+                .ChangePasswordAsync(applicationUser, currentPassword, newPassword);
+
+            if (!changePasswordResult.Succeeded)
+            {
+                return ChangePasswordResult.GetFailedPasswordChange(
+                    "Не удалось сменить пароль, обратитесь в службу технической поддержки");
+            }
+
+            await SignOutAsync(currentUser);
+            return ChangePasswordResult.GetSuccededPasswordChange();
         }
     }
 }

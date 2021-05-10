@@ -7,6 +7,8 @@ namespace AbrRestaurant.Infrastructure.Services
     {
         public Guid Id { get; set; }
         public string Email { get; set; }
+        public int IssuedMoment { get; set; }
+        public bool IsAnonymousUser => Id == Guid.Empty;
 
         public static CurrentUserIdentity AnonymousUser => 
             new CurrentUserIdentity() { Id = Guid.Empty, Email = string.Empty };
@@ -41,7 +43,8 @@ namespace AbrRestaurant.Infrastructure.Services
             return new CurrentUserIdentity()
             {
                 Id = Guid.Parse(_httpContextAccessor.HttpContext.User.FindFirst("id").Value),
-                Email = _httpContextAccessor.HttpContext.User.FindFirst("email").Value
+                Email = _httpContextAccessor.HttpContext.User.FindFirst("email").Value,
+                IssuedMoment = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("issued_moment").Value),
             };
         }
     }
