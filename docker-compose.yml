@@ -1,0 +1,27 @@
+version: '3.5'
+
+networks:
+  localdev:
+    name: localdev
+
+services:
+  menu-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    depends_on:
+      - db-server
+    restart: always
+
+  db-server:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=2348
+    networks:
+      - localdev
