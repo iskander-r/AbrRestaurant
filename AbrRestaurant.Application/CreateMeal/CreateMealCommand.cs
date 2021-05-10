@@ -61,9 +61,9 @@ namespace AbrRestaurant.Application.CreateMeal
 
     public class CreateMealCommandValidator : AbstractValidator<CreateMealCommand>
     {
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly AbrApplicationDbContext _applicationDbContext;
         public CreateMealCommandValidator(
-            ApplicationDbContext applicationDbContext)
+            AbrApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
 
@@ -106,10 +106,10 @@ namespace AbrRestaurant.Application.CreateMeal
     public class CreateMealCommandHandler :
         IRequestHandler<CreateMealCommand, EitherResult<CreateMealCommandResponse, DomainError>>
     {
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly AbrApplicationDbContext _applicationDbContext;
 
         public CreateMealCommandHandler(
-            ApplicationDbContext applicationDbContext)
+            AbrApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }

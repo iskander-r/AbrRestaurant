@@ -8,6 +8,8 @@
 	  <PackageReference Include="MediatR" Version="9.0.0" />
 	  <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.5" />
+	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.5" />
+	  <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.5" />
 	  <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.5" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -19,11 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AbrRestaurant.Domain\AbrRestaurant.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Identity\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

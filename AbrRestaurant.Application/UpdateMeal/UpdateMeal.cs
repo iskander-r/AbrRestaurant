@@ -31,9 +31,9 @@ namespace AbrRestaurant.Application.UpdateMeal
 
     public class UpdateMealCommandValidator : AbstractValidator<UpdateMealCommand>
     {
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly AbrApplicationDbContext _applicationDbContext;
         public UpdateMealCommandValidator(
-            ApplicationDbContext applicationDbContext)
+            AbrApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
 
@@ -63,9 +63,9 @@ namespace AbrRestaurant.Application.UpdateMeal
     public class UpdateMealCommandHandler :
         IRequestHandler<UpdateMealCommand, EitherResult<CreateMealCommandResponse, DomainError>>
     {
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly AbrApplicationDbContext _applicationDbContext;
         public UpdateMealCommandHandler(
-            ApplicationDbContext applicationDbContext)
+            AbrApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }

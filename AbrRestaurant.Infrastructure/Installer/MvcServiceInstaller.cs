@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AbrRestaurant.Infrastructure.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AbrRestaurant.Infrastructure.Installer
@@ -15,6 +16,9 @@ namespace AbrRestaurant.Infrastructure.Installer
             serviceCollection
                 .AddMvc()
                 .AddNewtonsoftJson();
+
+            serviceCollection
+                .AddScoped<IIdentityService, IdentityService>();
         }
     }
 }

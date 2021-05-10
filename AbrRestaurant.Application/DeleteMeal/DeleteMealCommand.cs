@@ -23,9 +23,9 @@ namespace AbrRestaurant.Application.DeleteMeal
     public class DeleteMealCommandHandler :
         IRequestHandler<DeleteMealCommand, EitherResult<EmptyResponse, DomainError>>
     {
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly AbrApplicationDbContext _applicationDbContext;
         public DeleteMealCommandHandler(
-            ApplicationDbContext applicationDbContext)
+            AbrApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }

@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace AbrRestaurant.MenuApi.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class AbrApplicationDbContext : DbContext
     {
         public DbSet<Meal> Meals { get; set; }
-        public ApplicationDbContext(
-            DbContextOptions<ApplicationDbContext> dbContextOptions) 
+        public AbrApplicationDbContext(
+            DbContextOptions<AbrApplicationDbContext> dbContextOptions) 
             : base(dbContextOptions)
         {
         }

@@ -28,9 +28,9 @@ namespace AbrRestaurant.Application.GetMeal
         IRequestHandler<GetAllMealsQuery, IEnumerable<CreateMealCommandResponse>>,
         IRequestHandler<GetMealByIdQuery, EitherResult<CreateMealCommandResponse, DomainEntityNotFoundError>>
     {
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly AbrApplicationDbContext _applicationDbContext;
         public GetMealRequestHandler(
-            ApplicationDbContext applicationDbContext)
+            AbrApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }

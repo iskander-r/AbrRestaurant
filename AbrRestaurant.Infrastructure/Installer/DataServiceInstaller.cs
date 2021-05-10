@@ -1,4 +1,6 @@
-﻿using AbrRestaurant.MenuApi.Data;
+﻿using AbrRestaurant.Infrastructure.Identity;
+using AbrRestaurant.Infrastructure.Persistence;
+using AbrRestaurant.MenuApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,10 +13,18 @@ namespace AbrRestaurant.Infrastructure.Installer
             IServiceCollection serviceCollection,
             IConfiguration configuration)
         {
-            var connectionStringName = "ApplicationDbContext";
+            var dbContextCs = "AbrApplicationDbContext";
 
-            serviceCollection.AddDbContext<ApplicationDbContext>(
-                option => option.UseNpgsql(configuration.GetConnectionString(connectionStringName)));
+            serviceCollection.AddDbContext<AbrApplicationDbContext>(
+                option => option.UseNpgsql(configuration.GetConnectionString(dbContextCs)));
+
+            var identityDbContextCs = "AbrIdentityDbContext";
+
+            serviceCollection.AddDbContext<AbrIdentityDbContext>(
+                option => option.UseNpgsql(configuration.GetConnectionString(identityDbContextCs)));
+
+            serviceCollection.AddDefaultIdentity<AbrApplicationUser>()
+                .AddEntityFrameworkStores<AbrIdentityDbContext>();
         }
     }
 }

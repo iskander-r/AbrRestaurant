@@ -33,7 +33,7 @@ namespace AbrRestaurant.MenuApi
 
             // For developing and testing purposes enabled automatic migrations here. Must be removed later.
             var applicationDbContext = services.BuildServiceProvider()
-                .GetRequiredService<ApplicationDbContext>();
+                .GetRequiredService<AbrApplicationDbContext>();
 
             applicationDbContext.Database.EnsureDeleted();
             applicationDbContext.Database.EnsureCreated();
