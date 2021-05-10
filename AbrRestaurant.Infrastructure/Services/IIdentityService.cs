@@ -84,7 +84,8 @@ namespace AbrRestaurant.Infrastructure.Services
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim("Id", user.Id)
+                    new Claim("id", user.Id),
+                    new Claim("email", user.Email)
                 }),
                 Expires = DateTime.UtcNow.AddHours(24),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)

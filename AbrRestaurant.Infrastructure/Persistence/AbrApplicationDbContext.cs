@@ -1,4 +1,5 @@
 ﻿using AbrRestaurant.Domain.Entities;
+using AbrRestaurant.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -11,10 +12,14 @@ namespace AbrRestaurant.MenuApi.Data
     public class AbrApplicationDbContext : DbContext
     {
         public DbSet<Meal> Meals { get; set; }
+
+        private readonly CurrentUserIdentity _currentUserIdentity;
         public AbrApplicationDbContext(
-            DbContextOptions<AbrApplicationDbContext> dbContextOptions) 
+            DbContextOptions<AbrApplicationDbContext> dbContextOptions,
+            ICurrentApplicationUserProvider currentApplicationUserProvider) 
             : base(dbContextOptions)
         {
+            _currentUserIdentity = currentApplicationUserProvider.GetCurrentUser();
         }
 
         protected override void OnModelCreating(
@@ -59,6 +64,8 @@ namespace AbrRestaurant.MenuApi.Data
         {
             var now = DateTime.UtcNow;
             trackableEntity.CreatedOn = now;
+
+            trackableEntity.CreatedBy = _currentUserIdentity.Id.ToString();
         }
 
         private void ApplyOnUpdatedMetadata(TrackableEntity trackableEntity)

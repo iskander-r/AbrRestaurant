@@ -18,7 +18,13 @@ namespace AbrRestaurant.Infrastructure.Installer
                 .AddNewtonsoftJson();
 
             serviceCollection
+                .AddHttpContextAccessor();
+
+            serviceCollection
                 .AddScoped<IIdentityService, IdentityService>();
+
+            serviceCollection
+                .AddScoped<ICurrentApplicationUserProvider, CurrentApplicationUserProvider>();
         }
     }
 }

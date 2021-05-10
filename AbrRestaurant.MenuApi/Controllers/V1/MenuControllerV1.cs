@@ -4,6 +4,7 @@ using AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu.Requests;
 using AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu.Responses;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -13,6 +14,8 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
     [ApiController]
     public class MenuControllerV1 : BaseController
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
         [HttpGet(MenuResourceRoutesV1.MenuResource.Get)]
         public async Task<ActionResult<MenuResponseV1>> Get(
             [FromRoute] GetMenuByIdRequestV1 model)
