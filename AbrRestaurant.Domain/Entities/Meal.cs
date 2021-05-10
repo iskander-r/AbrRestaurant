@@ -1,6 +1,4 @@
-﻿using AbrRestaurant.MenuApi.Data.Trackable;
-
-namespace AbrRestaurant.MenuApi.Data.Domain
+﻿namespace AbrRestaurant.Domain.Entities
 {
     public class Meal : TrackableEntity
     {

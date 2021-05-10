@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System.Linq;
 using System.Reflection;
 
 namespace AbrRestaurant.MenuApi
@@ -26,9 +27,9 @@ namespace AbrRestaurant.MenuApi
         public void ConfigureServices(
             IServiceCollection services)
         {
-            var currentAssembly = Assembly.GetExecutingAssembly();
+            var installerAssembly = Assembly.GetAssembly(typeof(IServiceInstaller));
             
-            services.InstallServicesFromAssembly(_configuration, currentAssembly);
+            services.InstallServicesFromAssembly(_configuration, installerAssembly);
 
             // For developing and testing purposes enabled automatic migrations here. Must be removed later.
             var applicationDbContext = services.BuildServiceProvider()

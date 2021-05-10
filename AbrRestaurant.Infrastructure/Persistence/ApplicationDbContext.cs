@@ -1,5 +1,4 @@
-﻿using AbrRestaurant.MenuApi.Data.Domain;
-using AbrRestaurant.MenuApi.Data.Trackable;
+﻿using AbrRestaurant.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;

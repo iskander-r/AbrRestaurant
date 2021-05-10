@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AbrRestaurant.MenuApi.Data.Trackable
+namespace AbrRestaurant.Domain.Entities
 {
     public abstract class TrackableEntity
     {
