@@ -15,9 +15,12 @@ services:
     depends_on:
       - db-server
     restart: always
+    networks:
+      - localdev
 
   db-server:
     image: postgres
+    container_name: postgres_db
     volumes:
       - ./data/db:/var/lib/postgresql/data
     environment:

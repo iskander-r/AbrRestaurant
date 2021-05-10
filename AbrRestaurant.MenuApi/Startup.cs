@@ -35,19 +35,19 @@ namespace AbrRestaurant.MenuApi
             InstallMediator(services);
 
             // For developing and testing purposes enabled automatic migrations here. Must be removed later.
-            //var applicationDbContext = services.BuildServiceProvider()
-            //    .GetRequiredService<AbrApplicationDbContext>();
+            var applicationDbContext = services.BuildServiceProvider()
+                .GetRequiredService<AbrApplicationDbContext>();
 
-            //var identityDbContext = services.BuildServiceProvider()
-            //    .GetRequiredService<AbrIdentityDbContext>();
+            var identityDbContext = services.BuildServiceProvider()
+                .GetRequiredService<AbrIdentityDbContext>();
 
             //applicationDbContext.Database.EnsureDeleted();
-            //applicationDbContext.Database.EnsureCreated();
-            //applicationDbContext.Database.Migrate();
+            applicationDbContext.Database.EnsureCreated();
+            applicationDbContext.Database.Migrate();
 
             //identityDbContext.Database.EnsureDeleted();
-            //identityDbContext.Database.EnsureCreated();
-            //identityDbContext.Database.Migrate();
+            identityDbContext.Database.EnsureCreated();
+            identityDbContext.Database.Migrate();
         }
 
         private void InstallMediator(IServiceCollection serviceCollection)
