@@ -48,6 +48,7 @@ namespace AbrRestaurant.Application.GetMeal
             return paginatedQuery.Select(p => p.CreateResponse());
         }
 
+
         public async Task<EitherResult<CreateMealCommandResponse, DomainEntityNotFoundError>> Handle(
             GetMealByIdQuery request, CancellationToken cancellationToken)
         {

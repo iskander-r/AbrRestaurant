@@ -8,6 +8,7 @@ using AbrRestaurant.MenuApi.Data;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -45,6 +46,10 @@ namespace AbrRestaurant.Application.UpdateMeal
             RuleFor(p => p.CreateMeal.Price)
                 .Must(MealPriceMustBeInSpecifiedRange)
                     .WithMessage("Цена на блюдо должна быть указана в допустимых пределах");
+
+            RuleFor(p => p.CreateMeal.PictureBase64)
+                .Must(p => p.IsValidBase64String())
+                    .WithMessage("Фотография блюда должна быть передана в виде валидной base64 строки");
         }
 
         // TODO: Refactor to seperate Rule class / Factory later
@@ -93,7 +98,7 @@ namespace AbrRestaurant.Application.UpdateMeal
         {
             mealToUpdate.Name = updatedModel.Name;
             mealToUpdate.Description = updatedModel.Name;
-            mealToUpdate.PictureContent = updatedModel.PictureAsBase64?.ToByteArray() ?? null;
+            mealToUpdate.PictureContent = Convert.FromBase64String(updatedModel.PictureBase64);
             mealToUpdate.Price = updatedModel.Price;
         }
     }

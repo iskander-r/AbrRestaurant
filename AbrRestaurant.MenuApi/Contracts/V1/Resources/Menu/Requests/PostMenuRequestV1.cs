@@ -1,19 +1,22 @@
 ﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu.Requests
 {
-    public class CreateMenuRequestV1
+    public class PostMenuRequestV1
     {
-        [JsonRequired]
+        [Required]
         public string Name { get; set; }
 
-        [JsonRequired]
+        [Required]
         public string Description { get; set; }
 
-        [JsonProperty("picture_base64")]
+        [Required]
+        [JsonProperty("picture_base_64")]
         public string PictureAsBase64 { get; set; }
 
-        [JsonProperty]
+        [Required]
+        [Range(1, 100_000)]
         public decimal Price { get; set; }
     }
 }

@@ -19,18 +19,18 @@ namespace AbrRestaurant.Application.CreateMeal
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public string PictureAsBase64 { get; set; }
+        public string PictureBase64 { get; set; }
         public decimal Price { get; set; }
 
         public CreateMealCommand(
             string name, 
             string description, 
-            string pictureAsBase64, 
+            string pictureBase64, 
             decimal price)
         {
             Name = name;
             Description = description;
-            PictureAsBase64 = pictureAsBase64;
+            PictureBase64 = pictureBase64;
             Price = price;
         }
     }
@@ -41,20 +41,20 @@ namespace AbrRestaurant.Application.CreateMeal
         public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string PictureUri { get; set; }
+        public string PictureBase64 { get; set; }
         public decimal Price { get; set; }
 
         public CreateMealCommandResponse(
             string id, 
             string name,
             string description, 
-            string pictureUri,
+            string pictureBase64,
             decimal price)
         {
             Id = id;
             Name = name;
             Description = description;
-            PictureUri = pictureUri;
+            PictureBase64 = pictureBase64;
             Price = price;
         }
     }
@@ -78,6 +78,10 @@ namespace AbrRestaurant.Application.CreateMeal
             RuleFor(p => p.Price)
                 .Must(MealPriceMustBeInSpecifiedRange)
                     .WithMessage("Цена на блюдо должна быть указана в допустимых пределах");
+
+            RuleFor(p => p.PictureBase64)
+                .Must(p => p.IsValidBase64String())
+                    .WithMessage("Фотография блюда должна быть передана в виде валидной base64 строки");
         }
 
         private async Task<bool> MealMustHaveUniqueName(

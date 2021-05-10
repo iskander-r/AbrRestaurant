@@ -8,21 +8,21 @@ namespace AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu.Responses
         public string Name { get; set; }
         public string Description { get; set; }
 
-        [JsonProperty("picture_uri")]
-        public string PictureUri { get; set; }
+        [JsonProperty("picture_base_64")]
+        public string PictureBase64 { get; set; }
         public decimal Price { get; set; }
 
         public MenuResponseV1(
             string id,
             string name, 
             string description,
-            string pictureUri, 
+            string pictureBase64, 
             decimal price)
         {
             Id = id;
             Name = name;
             Description = description;
-            PictureUri = pictureUri;
+            PictureBase64 = pictureBase64;
             Price = price;
         }
     }

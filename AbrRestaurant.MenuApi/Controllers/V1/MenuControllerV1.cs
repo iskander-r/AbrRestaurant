@@ -27,7 +27,7 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
 
         [HttpPost(MenuResourceRoutesV1.MenuResource.Post)]
         public async Task<IActionResult> Post(
-            [FromBody] CreateMenuRequestV1 model)
+            [FromBody] PostMenuRequestV1 model)
         {
             var command = model.ToApplicationCommand();
             var commandResponse = await _mediator.Send(command);

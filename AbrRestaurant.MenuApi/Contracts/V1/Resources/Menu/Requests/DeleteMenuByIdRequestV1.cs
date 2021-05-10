@@ -2,9 +2,9 @@
 
 namespace AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu.Requests
 {
-    public class GetMenuByIdRequestV1
+    public class DeleteMenuByIdRequestV1
     {
         [Required]
-        public string Id { get; set; }
+        public int Id { get; set; }
     }
 }

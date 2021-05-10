@@ -1,6 +1,7 @@
 ﻿using AbrRestaurant.Application.CreateMeal;
 using AbrRestaurant.Domain.Entities;
 using AbrRestaurant.Infrastructure.Utils;
+using System;
 
 namespace AbrRestaurant.Application.Mappers
 {
@@ -22,7 +23,7 @@ namespace AbrRestaurant.Application.Mappers
             {
                 Name = request.Name,
                 Description = GetDescriptionOrDefault(request.Description),
-                PictureContent = request.PictureAsBase64?.ToByteArray() ?? null,
+                PictureContent = Convert.FromBase64String(request.PictureBase64),
                 Price = request.Price
             };
         }
