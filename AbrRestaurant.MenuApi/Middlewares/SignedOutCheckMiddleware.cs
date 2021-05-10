@@ -22,7 +22,6 @@ namespace AbrRestaurant.MenuApi.Middlewares
             _userManager = userManager;
         }
 
-
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             // TODO: apply some caching policy aka ConcurrentDictionary,

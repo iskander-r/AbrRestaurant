@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 using System.Reflection;
 
 namespace AbrRestaurant.MenuApi
@@ -49,13 +50,14 @@ namespace AbrRestaurant.MenuApi
             //identityDbContext.Database.Migrate();
         }
 
-        private void InstallMediator(IServiceCollection serivceCollection)
+        private void InstallMediator(IServiceCollection serviceCollection)
         {
             var applicationAssembly = Assembly.GetAssembly(typeof(IApplicationAssemblyMarker));
-            serivceCollection.AddMediatR(applicationAssembly);
-            serivceCollection.AddTransient<SignedOutCheckMiddleware>();
-        }
+            serviceCollection.AddMediatR(applicationAssembly);
 
+            serviceCollection.AddTransient<SignedOutCheckMiddleware>();
+            serviceCollection.AddTransient<RequestCurrentUserEnrichedMiddleware>();
+        }
 
         public void Configure(
             IApplicationBuilder app, IWebHostEnvironment env)
@@ -82,11 +84,14 @@ namespace AbrRestaurant.MenuApi
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseSerilogRequestLogging();
+
             app.UseAuthentication();
 
             app.UseRouting();
             app.UseAuthorization();
 
+            app.UseRequestCurrentUserEnrichedMiddleware();
             app.UseSignedOutCheckMiddleware();
 
             app.UseEndpoints(endpoints =>

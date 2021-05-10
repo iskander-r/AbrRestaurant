@@ -5,6 +5,7 @@ using AbrRestaurant.MenuApi.Contracts.V1.Resources.Identity.Responses;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
@@ -15,10 +16,14 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
     public class IdentityController : ControllerBase
     {
         private readonly IIdentityService _identityService;
+        private readonly ILogger<IdentityController> _logger;
+
         public IdentityController(
-            IIdentityService identityService)
+            IIdentityService identityService,
+            ILogger<IdentityController> logger)
         {
             _identityService = identityService;
+            _logger = logger;
         }
 
 

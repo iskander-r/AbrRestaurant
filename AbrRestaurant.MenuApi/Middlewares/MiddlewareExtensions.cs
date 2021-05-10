@@ -9,5 +9,12 @@ namespace AbrRestaurant.MenuApi.Middlewares
         {
             return builder.UseMiddleware<SignedOutCheckMiddleware>();
         }
+
+
+        public static IApplicationBuilder UseRequestCurrentUserEnrichedMiddleware(
+            this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<RequestCurrentUserEnrichedMiddleware>();
+        }
     }
 }
