@@ -1,5 +1,6 @@
 ﻿using AbrRestaurant.Infrastructure.Services;
 using Microsoft.AspNetCore.Http;
+using Serilog;
 using Serilog.Context;
 using System.Threading.Tasks;
 
@@ -17,13 +18,12 @@ namespace AbrRestaurant.MenuApi.Middlewares
         {
             var currentUser = _currentApplicationUserProvider.GetCurrentUser();
 
-            using (LogContext.PushProperty("is_current_user_anonymous", currentUser.IsAnonymousUser))
-            using (LogContext.PushProperty("current_user_id", currentUser.Id))
-            using (LogContext.PushProperty("current_user_email", currentUser.Email))
-            {
-                await next.Invoke(context);
-                return;
-            }
+            Log.Logger.ForContext("is_current_user_anonymous", currentUser.IsAnonymousUser);
+            Log.Logger.ForContext("current_user_id", currentUser.Id);
+            Log.Logger.ForContext("current_user_email", currentUser.Email);
+
+            await next.Invoke(context);
+            return;
         }
     }
 }

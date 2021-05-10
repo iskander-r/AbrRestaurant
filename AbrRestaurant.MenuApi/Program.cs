@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Events;
 using System;
 
 namespace AbrRestaurant.MenuApi
@@ -10,8 +11,11 @@ namespace AbrRestaurant.MenuApi
         public static void Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Error)
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
+                .WriteTo.Seq(
+                    Environment.GetEnvironmentVariable("SEQ_URL") ?? "http://localhost:5341")
                 .CreateLogger();
 
             try
