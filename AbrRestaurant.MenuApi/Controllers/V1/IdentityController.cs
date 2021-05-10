@@ -22,7 +22,7 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
 
 
         [HttpPost(IdentityResourceRoutesV1.IdentityResource.SignUp)]
-        public async Task<IActionResult> SignUp([FromBody] UserRegistrationRequest model)
+        public async Task<IActionResult> SignUp([FromBody] UserSignUpRequest model)
         {
             var authResposne = await _identityService.SignUpAsync(model.Email, model.Password);
 
@@ -32,10 +32,16 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
             return Ok(new AuthSuccessResponse { Token = authResposne.Token });
         }
 
+
         [HttpPost(IdentityResourceRoutesV1.IdentityResource.SignIn)]
-        public async Task<IActionResult> SignIn()
+        public async Task<IActionResult> SignIn([FromBody] UserSignInRequest model)
         {
-            throw new NotImplementedException();
+            var authResposne = await _identityService.SignInAsync(model.Email, model.Password);
+
+            if (!authResposne.IsAuthSucceded)
+                return BadRequest(new AuthFailedResponse(authResposne.Errors));
+
+            return Ok(new AuthSuccessResponse { Token = authResposne.Token });
         }
     }
 }

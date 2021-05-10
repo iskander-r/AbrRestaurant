@@ -2,6 +2,8 @@
 using AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu.Mappers;
 using AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu.Requests;
 using AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu.Responses;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -26,7 +28,8 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
 
 
         [HttpGet(MenuResourceRoutesV1.MenuResource.GetAll)]
-        public async Task<IActionResult> GetAll(GetAllMenuRequestV1 model)
+        public async Task<IActionResult> GetAll(
+            [FromQuery] GetAllMenuRequestV1 model)
         {
             var query = model.ToApplicationCommand();
             var response = await _mediator.Send(query);
@@ -36,6 +39,7 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
 
 
         [HttpPost(MenuResourceRoutesV1.MenuResource.Post)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Post(
             [FromBody] PostMenuRequestV1 model)
         {
@@ -50,6 +54,7 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
 
 
         [HttpPut(MenuResourceRoutesV1.MenuResource.Put)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Put(
             [FromBody] PutMenuRequestV1 model)
         {

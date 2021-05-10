@@ -2,7 +2,7 @@
 
 namespace AbrRestaurant.MenuApi.Contracts.V1.Resources.Identity.Requests
 {
-    public class UserRegistrationRequest
+    public class UserSignInRequest
     {
         [Required]
         [EmailAddress]

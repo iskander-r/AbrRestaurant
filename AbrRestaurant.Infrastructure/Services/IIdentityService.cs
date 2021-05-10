@@ -34,7 +34,19 @@ namespace AbrRestaurant.Infrastructure.Services
 
         public async Task<AuthenticationResult> SignInAsync(string email, string password)
         {
-            throw new NotImplementedException();
+            var existingUser = await _userManager.FindByEmailAsync(email);
+
+            if(existingUser == null)
+                return AuthenticationResult.GetFailedAuthentication(
+                    $"Указанная комбинация имени пользователя и пароля не найдена!");
+
+            var isValidPassword = await _userManager.CheckPasswordAsync(existingUser, password);
+
+            if(!isValidPassword)
+                return AuthenticationResult.GetFailedAuthentication(
+                    $"Указанная комбинация имени пользователя и пароля не найдена!");
+
+            return AuthenticateUser(existingUser);
         }
 
         public async Task<AuthenticationResult> SignUpAsync(string email, string password)
@@ -57,6 +69,11 @@ namespace AbrRestaurant.Infrastructure.Services
                 return AuthenticationResult.GetFailedAuthentication(
                     "Произошла ошибка при создании пользователя. Пожалуйста, попробуйте позже.");
 
+            return AuthenticateUser(applicationUser);
+        }
+
+        private AuthenticationResult AuthenticateUser(AbrApplicationUser user)
+        {
             // TODO: Decompose to at least 2 classes - JwtGeneratorService, JwtLifetimeService
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -66,10 +83,8 @@ namespace AbrRestaurant.Infrastructure.Services
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, applicationUser.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Email, applicationUser.Email),
-                    new Claim("Id", applicationUser.Id)
+                    new Claim("Id", user.Id)
                 }),
                 Expires = DateTime.UtcNow.AddHours(24),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
