@@ -1,6 +1,8 @@
+using AbrRestaurant.Application;
 using AbrRestaurant.Infrastructure.Installer;
 using AbrRestaurant.MenuApi.Data;
 using AbrRestaurant.MenuApi.Options;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +30,7 @@ namespace AbrRestaurant.MenuApi
             var installerAssembly = Assembly.GetAssembly(typeof(IServiceInstaller));
             
             services.InstallServicesFromAssembly(_configuration, installerAssembly);
+            InstallMediator(services);
 
             // For developing and testing purposes enabled automatic migrations here. Must be removed later.
             var applicationDbContext = services.BuildServiceProvider()
@@ -36,6 +39,12 @@ namespace AbrRestaurant.MenuApi
             applicationDbContext.Database.EnsureDeleted();
             applicationDbContext.Database.EnsureCreated();
             applicationDbContext.Database.Migrate();
+        }
+
+        private void InstallMediator(IServiceCollection serivceCollection)
+        {
+            var applicationAssembly = Assembly.GetAssembly(typeof(IApplicationAssemblyMarker));
+            serivceCollection.AddMediatR(applicationAssembly);
         }
 
 

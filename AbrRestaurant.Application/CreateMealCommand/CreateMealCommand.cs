@@ -84,8 +84,9 @@ namespace AbrRestaurant.Application.CreateMealCommand
         private async Task<bool> MealMustHaveUniqueName(
             string name, CancellationToken ct)
         {
+            // TODO: To find correct way to compare strings in case-insensitive manner in PostgreSQL provider.
             var allNamesUnique = await _applicationDbContext
-                .Meals.AllAsync(p => !string.Equals(p.Name, name, StringComparison.InvariantCultureIgnoreCase));
+                .Meals.AllAsync(p => p.Name != name);
 
             return allNamesUnique;
         }
@@ -132,7 +133,7 @@ namespace AbrRestaurant.Application.CreateMealCommand
             {
                 Name = request.Name,
                 Description = GetDescriptionOrDefault(request.Description),
-                PictureContent = request.PictureAsBase64.ToByteArray(),
+                PictureContent = request.PictureAsBase64?.ToByteArray() ?? null,
                 Price = request.Price
             };
         }
@@ -144,6 +145,6 @@ namespace AbrRestaurant.Application.CreateMealCommand
         }
 
         private string GetDescriptionOrDefault(string description) =>
-            description ?? "Описание для блюда еще не добавлено";
+            string.IsNullOrWhiteSpace(description) ? "Описание для блюда еще не добавлено" : description;
     }
 }
