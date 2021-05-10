@@ -9,4 +9,12 @@
     <PackageReference Include="MediatR" Version="9.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="GetMealQuery\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AbrRestaurant.Infrastructure\AbrRestaurant.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

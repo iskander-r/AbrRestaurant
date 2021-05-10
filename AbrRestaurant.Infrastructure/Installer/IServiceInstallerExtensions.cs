@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace AbrRestaurant.MenuApi.Installer
+namespace AbrRestaurant.Infrastructure.Installer
 {
     public static class IServiceInstallerExtensions
     {

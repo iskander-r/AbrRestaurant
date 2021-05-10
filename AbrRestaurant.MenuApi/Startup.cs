@@ -1,5 +1,5 @@
+using AbrRestaurant.Infrastructure.Installer;
 using AbrRestaurant.MenuApi.Data;
-using AbrRestaurant.MenuApi.Installer;
 using AbrRestaurant.MenuApi.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,8 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using System.Linq;
 using System.Reflection;
 
 namespace AbrRestaurant.MenuApi

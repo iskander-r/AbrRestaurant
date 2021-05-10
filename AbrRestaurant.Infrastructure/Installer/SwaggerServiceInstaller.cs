@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
-namespace AbrRestaurant.MenuApi.Installer
+namespace AbrRestaurant.Infrastructure.Installer
 {
     public class SwaggerServiceInstaller : IServiceInstaller
     {

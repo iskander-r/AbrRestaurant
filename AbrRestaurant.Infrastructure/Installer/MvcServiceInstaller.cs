@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AbrRestaurant.MenuApi.Installer
+namespace AbrRestaurant.Infrastructure.Installer
 {
     public class MvcServiceInstaller : IServiceInstaller
     {
