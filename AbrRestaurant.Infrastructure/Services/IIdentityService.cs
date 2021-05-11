@@ -1,26 +1,31 @@
-﻿using AbrRestaurant.Infrastructure.Identity;
-using AbrRestaurant.Infrastructure.Models;
+﻿using AbrRestaurant.Domain.Errors;
+using AbrRestaurant.Infrastructure.Identity;
 using AbrRestaurant.Infrastructure.Options;
 using AbrRestaurant.Infrastructure.Utils;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AbrRestaurant.Infrastructure.Services
 {
+    public class CurrentUserProfile
+    {
+        public string Email { get; set; }
+        public string Username { get; set; }
+    }
+
     public interface IIdentityService
     {
-        Task<AuthenticationResult> SignUpAsync(string email, string password);
-        Task<AuthenticationResult> SignInAsync(string email, string password);
+        Task<string> SignUpAsync(string email, string username, string password);
+        Task<string> SignInAsync(string email, string password);
         Task SignOutAsync();
-        Task<ChangePasswordResult> ChangePasswordAsync(string currentPassword, string newPassword);
+        Task ChangePasswordAsync(string currentPassword, string newPassword);
+        Task<CurrentUserProfile> GetProfile();
     }
 
     public class IdentityService : IIdentityService
@@ -28,6 +33,7 @@ namespace AbrRestaurant.Infrastructure.Services
         private readonly UserManager<AbrApplicationUser> _userManager;
         private readonly JwtConfigurationOptions _jwtConfigurationOptions;
         private readonly ICurrentApplicationUserProvider _currentUserProvider;
+
         public IdentityService(
             UserManager<AbrApplicationUser> userManager, 
             JwtConfigurationOptions jwtConfigurationOptions,
@@ -39,50 +45,52 @@ namespace AbrRestaurant.Infrastructure.Services
         }
 
  
-        public async Task<AuthenticationResult> SignInAsync(
+        public async Task<string> SignInAsync(
             string email, string password)
         {
             var existingUser = await _userManager.FindByEmailAsync(email);
 
-            if(existingUser == null)
-                return AuthenticationResult.GetFailedAuthentication(
+            if (existingUser == null)
+                throw new BadRequestException(
                     $"Указанная комбинация имени пользователя и пароля не найдена!");
 
             var isValidPassword = await _userManager.CheckPasswordAsync(existingUser, password);
 
             if(!isValidPassword)
-                return AuthenticationResult.GetFailedAuthentication(
+                throw new BadRequestException(
                     $"Указанная комбинация имени пользователя и пароля не найдена!");
 
             return AuthenticateUser(existingUser);
         }
 
 
-        public async Task<AuthenticationResult> SignUpAsync(
-            string email, string password)
+        public async Task<string> SignUpAsync(
+            string email, string username, string password)
         {
             var existingUser = await _userManager.FindByEmailAsync(email);
 
             if (existingUser != null)
-                return AuthenticationResult.GetFailedAuthentication(
+                throw new BadRequestException(
                     $"Пользователь с указанным почтовым адресом '{email}' уже существует!");
 
             var applicationUser = new AbrApplicationUser()
             {
                 Email = email.ToUpper(),
-                UserName = email.ToUpper()
+                UserName = username.ToUpper(),
             };
 
-            var createdApplicationUser = await _userManager.CreateAsync(applicationUser, password);
+            var createdApplicationUser = await _userManager
+                .CreateAsync(applicationUser, password);
 
             if (!createdApplicationUser.Succeeded)
-                return AuthenticationResult.GetFailedAuthentication(
-                    "Произошла ошибка при создании пользователя. Пожалуйста, попробуйте позже.");
+                throw new BadRequestException(
+                    "Произошла ошибка при создании пользователя. " +
+                    "Убедитесь, что ваш пароль состоит как минимум из...");
 
             return AuthenticateUser(applicationUser);
         }
 
-        private AuthenticationResult AuthenticateUser(
+        private string AuthenticateUser(
             AbrApplicationUser user)
         {
             // TODO: Decompose to at least 2 classes - JwtGeneratorService, JwtLifetimeService
@@ -104,7 +112,7 @@ namespace AbrRestaurant.Infrastructure.Services
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return AuthenticationResult.GetSuccededAuthentication(tokenHandler.WriteToken(token));
+            return tokenHandler.WriteToken(token);
         }
 
         public async Task SignOutAsync()
@@ -119,7 +127,7 @@ namespace AbrRestaurant.Infrastructure.Services
             await _userManager.UpdateAsync(applicationUser);
         }
 
-        public async Task<ChangePasswordResult> ChangePasswordAsync(
+        public async Task ChangePasswordAsync(
             string currentPassword, string newPassword)
         {
             var currentUser = _currentUserProvider.GetCurrentUser();
@@ -130,12 +138,22 @@ namespace AbrRestaurant.Infrastructure.Services
 
             if (!changePasswordResult.Succeeded)
             {
-                return ChangePasswordResult.GetFailedPasswordChange(
+                throw new BadRequestException(
                     "Не удалось сменить пароль, обратитесь в службу технической поддержки");
             }
 
             await SignOutAsync();
-            return ChangePasswordResult.GetSuccededPasswordChange();
+        }
+
+        public async Task<CurrentUserProfile> GetProfile()
+        {
+            var applicationUser = await _userManager
+                .FindByEmailAsync(_currentUserProvider.GetCurrentUser().Email);
+
+            return new CurrentUserProfile
+            { 
+                Email = applicationUser.Email, Username = applicationUser.UserName
+            };
         }
     }
 }

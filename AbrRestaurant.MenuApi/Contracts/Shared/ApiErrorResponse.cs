@@ -1,9 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using AbrRestaurant.Domain.Errors;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace AbrRestaurant.MenuApi.Contracts.Shared
 {
-    public class ApiErrorResponse<T>
+    public class ApiErrorResponse
     {
         [JsonProperty("trace_id")]
         public string TraceId { get; set; }
@@ -16,8 +18,20 @@ namespace AbrRestaurant.MenuApi.Contracts.Shared
 
         [JsonProperty("http_status_code")]
         public int HttpStatusCode { get; set; }
+    }
 
-        [JsonProperty("error_object", NullValueHandling = NullValueHandling.Ignore)]
-        public T ErrorObject { get; set; }
+    public static class ApiErrorResponseFactory
+    {
+        public static ApiErrorResponse CreateFrom(
+            BaseException domainException, string traceId)
+        {
+            return new ApiErrorResponse
+            {
+                TraceId = traceId,
+                HttpStatusCode = domainException.AssociatedHttpStatusCode,
+                ErrorDescriptions = domainException.ErrorDescriptions,
+                MomentUtc = DateTime.UtcNow.ToString()
+            };
+        }
     }
 }

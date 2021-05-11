@@ -6,13 +6,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Threading.Tasks;
 
 namespace AbrRestaurant.MenuApi.Controllers.V1
 {
     [ApiController]
-    [AllowAnonymous]
     public class IdentityController : ControllerBase
     {
         private readonly IIdentityService _identityService;
@@ -26,28 +24,33 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
             _logger = logger;
         }
 
+        [HttpGet(IdentityResourceRoutesV1.IdentityResource.GetProfile)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetProfile()
+        {
+            var profile = await _identityService.GetProfile();
+
+            return Ok(profile);
+        }
+
 
         [HttpPost(IdentityResourceRoutesV1.IdentityResource.SignUp)]
-        public async Task<IActionResult> SignUp([FromBody] UserSignUpRequest model)
+        public async Task<IActionResult> SignUp(
+            [FromBody] UserSignUpRequest model)
         {
-            var authResposne = await _identityService.SignUpAsync(model.Email, model.Password);
-
-            if (!authResposne.IsAuthSucceded)
-                return BadRequest(new AuthFailedResponse(authResposne.Errors));
+            var token = await _identityService.SignUpAsync(model.Email, model.Username, model.Password);       
             
-            return Ok(new AuthSuccessResponse { Token = authResposne.Token });
+            return Ok(new AuthSuccessResponse(token));
         }
 
 
         [HttpPost(IdentityResourceRoutesV1.IdentityResource.SignIn)]
-        public async Task<IActionResult> SignIn([FromBody] UserSignInRequest model)
+        public async Task<IActionResult> SignIn(
+            [FromBody] UserSignInRequest model)
         {
-            var authResposne = await _identityService.SignInAsync(model.Email, model.Password);
-
-            if (!authResposne.IsAuthSucceded)
-                return BadRequest(new AuthFailedResponse(authResposne.Errors));
-
-            return Ok(new AuthSuccessResponse { Token = authResposne.Token });
+            var token = await _identityService.SignInAsync(model.Email, model.Password);
+            
+            return Ok(new AuthSuccessResponse(token));
         }
 
 
@@ -56,6 +59,7 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
         public new async Task<IActionResult> SignOut()
         {
             await _identityService.SignOutAsync();
+            
             return Ok();
         }
 
@@ -64,10 +68,10 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> ChangePassword(UserChangePasswordRequest model)
         {
-            var result = await _identityService
+            await _identityService
                 .ChangePasswordAsync(model.CurrentPassword, model.NewPassword);
 
-            return Ok(result);
+            return Ok();
         }
     }
 }

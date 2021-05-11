@@ -1,5 +1,4 @@
 ﻿using AbrRestaurant.Application.CreateMeal;
-using AbrRestaurant.Application.Generics;
 using AbrRestaurant.Application.Mappers;
 using AbrRestaurant.Domain.Entities;
 using AbrRestaurant.Domain.Errors;
@@ -9,13 +8,14 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace AbrRestaurant.Application.UpdateMeal
 {
     public class UpdateMealCommand : 
-        IRequest<EitherResult<CreateMealCommandResponse, DomainError>>
+        IRequest<CreateMealCommandResponse>
     {
         public int Id { get; }
         public CreateMealCommand CreateMeal { get; }
@@ -31,12 +31,8 @@ namespace AbrRestaurant.Application.UpdateMeal
 
     public class UpdateMealCommandValidator : AbstractValidator<UpdateMealCommand>
     {
-        private readonly AbrApplicationDbContext _applicationDbContext;
-        public UpdateMealCommandValidator(
-            AbrApplicationDbContext applicationDbContext)
+        public UpdateMealCommandValidator()
         {
-            _applicationDbContext = applicationDbContext;
-
             RuleFor(p => p.CreateMeal.Name)
                 .NotEmpty()
                     .WithMessage("Необходимо указать название блюда")
@@ -61,7 +57,7 @@ namespace AbrRestaurant.Application.UpdateMeal
     }
 
     public class UpdateMealCommandHandler :
-        IRequestHandler<UpdateMealCommand, EitherResult<CreateMealCommandResponse, DomainError>>
+        IRequestHandler<UpdateMealCommand, CreateMealCommandResponse>
     {
         private readonly AbrApplicationDbContext _applicationDbContext;
         public UpdateMealCommandHandler(
@@ -70,21 +66,23 @@ namespace AbrRestaurant.Application.UpdateMeal
             _applicationDbContext = applicationDbContext;
         }
 
-        public async Task<EitherResult<CreateMealCommandResponse, DomainError>> Handle(
+        public async Task<CreateMealCommandResponse> Handle(
             UpdateMealCommand request, CancellationToken cancellationToken)
         {
             var mealToUpdate = await _applicationDbContext.Meals
                 .SingleOrDefaultAsync(p => p.Id == request.Id && !p.IsDeleted);
 
             if (mealToUpdate != null)
-                return new DomainEntityNotFoundError(
+                throw new ResourceNotFoundException(
                     $"Блюдо с идентификатором {request.Id} не найдено в меню!");
 
-            var validator = new UpdateMealCommandValidator(_applicationDbContext);
+            var validator = new UpdateMealCommandValidator();
             var validationResult = validator.Validate(request);
 
             if (!validationResult.IsValid)
-                return validationResult.ToDomainError();
+                throw new BadRequestException(
+                    validationResult.Errors
+                        .Select(p => p.ErrorMessage).ToArray());
 
             Patch(mealToUpdate, request.CreateMeal);
             _applicationDbContext.Meals.Update(mealToUpdate);
