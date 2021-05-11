@@ -1,4 +1,5 @@
 ﻿using AbrRestaurant.Infrastructure.Services;
+using AbrRestaurant.MenuApi.Contracts.Shared;
 using AbrRestaurant.MenuApi.Contracts.V1.Resources.Identity;
 using AbrRestaurant.MenuApi.Contracts.V1.Resources.Identity.Requests;
 using AbrRestaurant.MenuApi.Contracts.V1.Resources.Identity.Responses;
@@ -13,6 +14,7 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
     /// API-endpoint-ы для для управления пользователем и сессией
     /// </summary>
     [ApiController]
+    [Produces("application/json")]
     public class IdentityController : ControllerBase
     {
         private readonly IIdentityService _identityService;
@@ -28,7 +30,9 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
         /// </summary>
         [HttpGet(IdentityResourceRoutesV1.IdentityResource.GetProfile)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetProfile()
+        [ProducesResponseType(typeof(CurrentUserProfile), 200)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        public async Task<ActionResult<CurrentUserProfile>> GetProfile()
         {
             var profile = await _identityService.GetProfile();
             return Ok(profile);
@@ -38,8 +42,13 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
         /// <summary>
         /// API для регистрации нового пользователя, ROPC-flow
         /// </summary>
+        /// <response code="200">Новый пользователь успешно создан</response>
+        /// <response code="400">Произошла ошибка при создании пользователя - например, 
+        /// необходимо установить более сложный пароль</response>
         [HttpPost(IdentityResourceRoutesV1.IdentityResource.SignUp)]
-        public async Task<IActionResult> SignUp(
+        [ProducesResponseType(typeof(AuthSuccessResponse), 200)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        public async Task<ActionResult<AuthSuccessResponse>> SignUp(
             [FromBody] UserSignUpRequest model)
         {
             var token = await _identityService.SignUpAsync(model.Email, model.Username, model.Password);       
@@ -52,7 +61,9 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
         /// API для аутентификации в системе
         /// </summary>
         [HttpPost(IdentityResourceRoutesV1.IdentityResource.SignIn)]
-        public async Task<IActionResult> SignIn(
+        [ProducesResponseType(typeof(AuthSuccessResponse), 200)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        public async Task<ActionResult<AuthSuccessResponse>> SignIn(
             [FromBody] UserSignInRequest model)
         {
             var token = await _identityService.SignInAsync(model.Email, model.Password);
@@ -67,6 +78,8 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
         /// </summary>
         [HttpPost(IdentityResourceRoutesV1.IdentityResource.SignOut)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
         public new async Task<IActionResult> SignOut()
         {
             await _identityService.SignOutAsync();
@@ -81,6 +94,9 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
         /// </summary>
         [HttpPost(IdentityResourceRoutesV1.IdentityResource.ChangePassword)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         public async Task<IActionResult> ChangePassword(UserChangePasswordRequest model)
         {
             await _identityService

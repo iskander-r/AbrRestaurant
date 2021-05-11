@@ -1,4 +1,5 @@
-﻿using AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu;
+﻿using AbrRestaurant.MenuApi.Contracts.Shared;
+using AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu;
 using AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu.Mappers;
 using AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu.Requests;
 using AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu.Responses;
@@ -15,12 +16,15 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
     /// API-endpoint для ресурса "блюдо в меню"
     /// </summary>
     [ApiController]
+    [Produces("application/json")]
     public class MenuControllerV1 : BaseController
     {
         /// <summary>
         /// API возвращает блюдо по ID
         /// </summary>
         [HttpGet(MenuResourceRoutesV1.MenuResource.Get)]
+        [ProducesResponseType(typeof(MenuResponseV1), 200)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
         public async Task<ActionResult<MenuResponseV1>> Get(
             [FromRoute] GetMenuByIdRequestV1 model)
         {
@@ -35,7 +39,8 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
         /// API возвращает все существующие блюда в меню, с учетом пагинации
         /// </summary>
         [HttpGet(MenuResourceRoutesV1.MenuResource.GetAll)]
-        public async Task<IActionResult> GetAll(
+        [ProducesResponseType(typeof(MenuResponseV1[]), 200)]
+        public async Task<ActionResult<MenuResponseV1[]>> GetAll(
             [FromQuery] GetAllMenuRequestV1 model)
         {
             var query = model.ToApplicationCommand();
@@ -50,7 +55,10 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
         /// </summary>
         [HttpPost(MenuResourceRoutesV1.MenuResource.Post)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> Post(
+        [ProducesResponseType(typeof(MenuResponseV1), 201)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        public async Task<ActionResult<MenuResponseV1>> Post(
             [FromBody] PostMenuRequestV1 model)
         {
             var command = model.ToApplicationCommand();
@@ -65,7 +73,10 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
         /// </summary>
         [HttpPut(MenuResourceRoutesV1.MenuResource.Put)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> Put(
+        [ProducesResponseType(typeof(MenuResponseV1), 201)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        public async Task<ActionResult<MenuResponseV1>> Put(
             [FromBody] PutMenuRequestV1 model)
         {
             var command = model.ToApplicationCommand();
@@ -80,7 +91,10 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
         /// </summary>
         [HttpDelete(MenuResourceRoutesV1.MenuResource.Get)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> Delete(
+        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        public async Task<ActionResult> Delete(
             [FromRoute] DeleteMenuByIdRequestV1 model)
         {
             var command = model.ToApplicationCommand();
