@@ -33,32 +33,41 @@ namespace AbrRestaurant.Infrastructure.Services
         private readonly UserManager<AbrApplicationUser> _userManager;
         private readonly JwtConfigurationOptions _jwtConfigurationOptions;
         private readonly ICurrentApplicationUserProvider _currentUserProvider;
+        private readonly ILogger<IdentityService> _logger;
 
         public IdentityService(
             UserManager<AbrApplicationUser> userManager, 
             JwtConfigurationOptions jwtConfigurationOptions,
-            ICurrentApplicationUserProvider currentUserProvider)
+            ICurrentApplicationUserProvider currentUserProvider,
+            ILogger<IdentityService> logger)
         {
             _userManager = userManager;
             _jwtConfigurationOptions = jwtConfigurationOptions;
             _currentUserProvider = currentUserProvider;
+            _logger = logger;
         }
 
  
         public async Task<string> SignInAsync(
             string email, string password)
         {
-            var existingUser = await _userManager.FindByEmailAsync(email);
+            var existingUser = await _userManager
+                .FindByEmailAsync(email);
 
             if (existingUser == null)
                 throw new BadRequestException(
                     $"Указанная комбинация имени пользователя и пароля не найдена!");
 
-            var isValidPassword = await _userManager.CheckPasswordAsync(existingUser, password);
+            var isValidPassword = await _userManager
+                .CheckPasswordAsync(existingUser, password);
 
             if(!isValidPassword)
                 throw new BadRequestException(
                     $"Указанная комбинация имени пользователя и пароля не найдена!");
+
+            _logger.LogInformation(
+                "Пользователь {email} успешно прошел аутентификацию в {currentMoment}", 
+                email, DateTime.UtcNow.ToString());
 
             return AuthenticateUser(existingUser);
         }
@@ -86,6 +95,10 @@ namespace AbrRestaurant.Infrastructure.Services
                 throw new BadRequestException(
                     "Произошла ошибка при создании пользователя. " +
                     "Убедитесь, что ваш пароль состоит как минимум из...");
+
+            _logger.LogInformation(
+                "Пользователь {email} успешно зарегистрировался в системе в {currentMoment}",
+                email, DateTime.UtcNow.ToString());
 
             return AuthenticateUser(applicationUser);
         }
@@ -125,6 +138,13 @@ namespace AbrRestaurant.Infrastructure.Services
             applicationUser.LastSignOutMomentTimestamp = DateTimeExtensions.NowUtcToUnixTimestamp();
 
             await _userManager.UpdateAsync(applicationUser);
+
+            var email = applicationUser.Email;
+
+            _logger.LogInformation(
+                "Пользователь {email} вышел из системы в {currentMoment}, " +
+                "отозвав все свои токены, выпушенные до {currentMoment}",
+                email, DateTime.UtcNow.ToString());
         }
 
         public async Task ChangePasswordAsync(
@@ -143,6 +163,12 @@ namespace AbrRestaurant.Infrastructure.Services
             }
 
             await SignOutAsync();
+
+            string email = currentUser.Email;
+
+            _logger.LogInformation(
+                "Пользователь {email} сменил свой пароль в {currentMoment}",
+                email, DateTime.UtcNow.ToString());
         }
 
         public async Task<CurrentUserProfile> GetProfile()

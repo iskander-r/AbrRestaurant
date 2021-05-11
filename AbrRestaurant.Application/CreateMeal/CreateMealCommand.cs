@@ -5,6 +5,7 @@ using AbrRestaurant.MenuApi.Data;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -104,11 +105,14 @@ namespace AbrRestaurant.Application.CreateMeal
         IRequestHandler<CreateMealCommand, CreateMealCommandResponse>
     {
         private readonly AbrApplicationDbContext _applicationDbContext;
+        private readonly ILogger<CreateMealCommandHandler> _logger;
 
         public CreateMealCommandHandler(
-            AbrApplicationDbContext applicationDbContext)
+            AbrApplicationDbContext applicationDbContext,
+            ILogger<CreateMealCommandHandler> logger)
         {
             _applicationDbContext = applicationDbContext;
+            _logger = logger;
         }
 
         public async Task<CreateMealCommandResponse> Handle(
@@ -126,6 +130,10 @@ namespace AbrRestaurant.Application.CreateMeal
             _applicationDbContext.Meals.Add(meal);
 
             await _applicationDbContext.SaveChangesAsync();
+
+            string mealId = meal.Id.ToString();
+            _logger.LogInformation("Создано новое блюдо в меню {mealId}", mealId);
+
             return meal.CreateResponse();
         }
     }

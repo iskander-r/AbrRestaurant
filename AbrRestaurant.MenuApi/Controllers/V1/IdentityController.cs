@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace AbrRestaurant.MenuApi.Controllers.V1
@@ -28,6 +29,8 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetProfile()
         {
+            throw new NotImplementedException();
+
             var profile = await _identityService.GetProfile();
 
             return Ok(profile);

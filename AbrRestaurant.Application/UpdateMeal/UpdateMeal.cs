@@ -7,6 +7,7 @@ using AbrRestaurant.MenuApi.Data;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading;
@@ -60,10 +61,14 @@ namespace AbrRestaurant.Application.UpdateMeal
         IRequestHandler<UpdateMealCommand, CreateMealCommandResponse>
     {
         private readonly AbrApplicationDbContext _applicationDbContext;
+        private readonly ILogger<UpdateMealCommandHandler> _logger;
+
         public UpdateMealCommandHandler(
-            AbrApplicationDbContext applicationDbContext)
+            AbrApplicationDbContext applicationDbContext,
+            ILogger<UpdateMealCommandHandler> logger)
         {
             _applicationDbContext = applicationDbContext;
+            _logger = logger;
         }
 
         public async Task<CreateMealCommandResponse> Handle(
@@ -88,6 +93,10 @@ namespace AbrRestaurant.Application.UpdateMeal
             _applicationDbContext.Meals.Update(mealToUpdate);
 
             await _applicationDbContext.SaveChangesAsync();
+
+            var mealId = mealToUpdate.Id.ToString();
+            _logger.LogInformation("В блюдо {mealId} внесли изменения", mealId);
+
             return mealToUpdate.CreateResponse();
         }
 

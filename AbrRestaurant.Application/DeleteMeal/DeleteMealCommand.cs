@@ -2,6 +2,7 @@
 using AbrRestaurant.MenuApi.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,10 +20,14 @@ namespace AbrRestaurant.Application.DeleteMeal
         IRequestHandler<DeleteMealCommand, Unit>
     {
         private readonly AbrApplicationDbContext _applicationDbContext;
+        private readonly ILogger<DeleteMealCommandHandler> _logger;
+
         public DeleteMealCommandHandler(
-            AbrApplicationDbContext applicationDbContext)
+            AbrApplicationDbContext applicationDbContext,
+            ILogger<DeleteMealCommandHandler> logger)
         {
             _applicationDbContext = applicationDbContext;
+            _logger = logger;
         }
         public async Task<Unit> Handle(
             DeleteMealCommand request, CancellationToken cancellationToken)
@@ -36,6 +41,9 @@ namespace AbrRestaurant.Application.DeleteMeal
 
             mealToDelete.IsDeleted = true;
             await _applicationDbContext.SaveChangesAsync();
+
+            string mealId = mealToDelete.Id.ToString();
+            _logger.LogInformation("Удалено блюдо в меню {mealId}", mealId);
 
             return Unit.Value;
         }

@@ -89,7 +89,7 @@ namespace AbrRestaurant.MenuApi
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-
+            app.UseRequestCurrentUserEnrichedMiddleware();
             app.UseSerilogRequestLogging();
 
             app.UseExceptionHandlingMiddleware();
@@ -97,9 +97,7 @@ namespace AbrRestaurant.MenuApi
             app.UseAuthentication();
 
             app.UseRouting();
-            app.UseAuthorization();
-
-            app.UseRequestCurrentUserEnrichedMiddleware();      
+            app.UseAuthorization();  
 
             app.UseSignedOutCheckMiddleware();
 
