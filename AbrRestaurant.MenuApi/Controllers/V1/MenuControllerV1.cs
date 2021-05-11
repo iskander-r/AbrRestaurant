@@ -11,9 +11,15 @@ using System.Threading.Tasks;
 
 namespace AbrRestaurant.MenuApi.Controllers.V1
 {
+    /// <summary>
+    /// API-endpoint для ресурса "блюдо в меню"
+    /// </summary>
     [ApiController]
     public class MenuControllerV1 : BaseController
     {
+        /// <summary>
+        /// API возвращает блюдо по ID
+        /// </summary>
         [HttpGet(MenuResourceRoutesV1.MenuResource.Get)]
         public async Task<ActionResult<MenuResponseV1>> Get(
             [FromRoute] GetMenuByIdRequestV1 model)
@@ -25,6 +31,9 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
         }
 
 
+        /// <summary>
+        /// API возвращает все существующие блюда в меню, с учетом пагинации
+        /// </summary>
         [HttpGet(MenuResourceRoutesV1.MenuResource.GetAll)]
         public async Task<IActionResult> GetAll(
             [FromQuery] GetAllMenuRequestV1 model)
@@ -36,6 +45,9 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
         }
 
 
+        /// <summary>
+        /// API позволяет добавить новое блюдо в меню, требуется аутентификация
+        /// </summary>
         [HttpPost(MenuResourceRoutesV1.MenuResource.Post)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Post(
@@ -48,6 +60,9 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
         }
 
 
+        /// <summary>
+        /// API позволяет добавить обновить блюдо в меню по ID, требуется аутентификация
+        /// </summary>
         [HttpPut(MenuResourceRoutesV1.MenuResource.Put)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Put(
@@ -60,6 +75,9 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
         }
 
 
+        /// <summary>
+        /// API позволяет удалить блюдо в меню по ID, требуется аутентификация
+        /// </summary>
         [HttpDelete(MenuResourceRoutesV1.MenuResource.Get)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Delete(

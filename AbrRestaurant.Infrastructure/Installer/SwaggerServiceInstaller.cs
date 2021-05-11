@@ -1,8 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace AbrRestaurant.Infrastructure.Installer
 {
@@ -45,9 +48,17 @@ namespace AbrRestaurant.Infrastructure.Installer
                         new List<string>()
                     }
                 });
+
+                var xmlFile = $"{Assembly.GetEntryAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+                option.IncludeXmlComments(xmlPath);
             });
 
             serviceCollection.AddSwaggerGenNewtonsoftSupport();
+
+            
+
 
         }
     }

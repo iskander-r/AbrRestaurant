@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 using System;
+using System.Text;
 
 namespace AbrRestaurant.MenuApi
 {
@@ -10,6 +11,8 @@ namespace AbrRestaurant.MenuApi
     {
         public static void Main(string[] args)
         {
+            Console.OutputEncoding = Encoding.UTF8;
+
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Error)
                 .Enrich.FromLogContext()
