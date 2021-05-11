@@ -7,13 +7,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F3E4B130-F8F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{18699219-604F-448F-854C-B2032851C794}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbrRestaurant.MenuApi", "AbrRestaurant.MenuApi\AbrRestaurant.MenuApi.csproj", "{051EF7A7-E3CB-4839-92DF-DBF83156508E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AbrRestaurant.MenuApi", "AbrRestaurant.MenuApi\AbrRestaurant.MenuApi.csproj", "{051EF7A7-E3CB-4839-92DF-DBF83156508E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbrRestaurant.Application", "AbrRestaurant.Application\AbrRestaurant.Application.csproj", "{C323C364-6A23-4DA4-98CE-DF6410ECB8BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AbrRestaurant.Application", "AbrRestaurant.Application\AbrRestaurant.Application.csproj", "{C323C364-6A23-4DA4-98CE-DF6410ECB8BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbrRestaurant.Infrastructure", "AbrRestaurant.Infrastructure\AbrRestaurant.Infrastructure.csproj", "{236F8587-9E7E-41D5-A0BD-81736D7E53E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AbrRestaurant.Infrastructure", "AbrRestaurant.Infrastructure\AbrRestaurant.Infrastructure.csproj", "{236F8587-9E7E-41D5-A0BD-81736D7E53E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbrRestaurant.Domain", "AbrRestaurant.Domain\AbrRestaurant.Domain.csproj", "{F3ABC5D8-1DA4-4DBB-84C3-6561259A36C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AbrRestaurant.Domain", "AbrRestaurant.Domain\AbrRestaurant.Domain.csproj", "{F3ABC5D8-1DA4-4DBB-84C3-6561259A36C3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4618972F-677E-4B74-BFC1-30C72E4B80AD}"
 	ProjectSection(SolutionItems) = preProject

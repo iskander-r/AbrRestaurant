@@ -1,21 +1,18 @@
-﻿using AbrRestaurant.Application.Generics;
-using AbrRestaurant.Application.Mappers;
+﻿using AbrRestaurant.Application.Mappers;
 using AbrRestaurant.Domain.Errors;
 using AbrRestaurant.Infrastructure.Utils;
 using AbrRestaurant.MenuApi.Data;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace AbrRestaurant.Application.CreateMeal
 {
-    /// <summary>
-    /// Command to create a meal in them menu.
-    /// </summary>
     public class CreateMealCommand : 
-        IRequest<EitherResult<CreateMealCommandResponse, DomainError>>
+        IRequest<CreateMealCommandResponse>
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -104,7 +101,7 @@ namespace AbrRestaurant.Application.CreateMeal
 
 
     public class CreateMealCommandHandler :
-        IRequestHandler<CreateMealCommand, EitherResult<CreateMealCommandResponse, DomainError>>
+        IRequestHandler<CreateMealCommand, CreateMealCommandResponse>
     {
         private readonly AbrApplicationDbContext _applicationDbContext;
 
@@ -114,14 +111,16 @@ namespace AbrRestaurant.Application.CreateMeal
             _applicationDbContext = applicationDbContext;
         }
 
-        public async Task<EitherResult<CreateMealCommandResponse, DomainError>> Handle(
+        public async Task<CreateMealCommandResponse> Handle(
             CreateMealCommand request, CancellationToken cancellationToken)
         {
             var validator = new CreateMealCommandValidator(_applicationDbContext);
             var validationResult = validator.Validate(request);
 
             if (!validationResult.IsValid)
-                return validationResult.ToDomainError();
+                throw new BadRequestException(
+                    validationResult.Errors
+                        .Select(p => p.ErrorMessage).ToArray());
 
             var meal = request.MapToMeal();
             _applicationDbContext.Meals.Add(meal);

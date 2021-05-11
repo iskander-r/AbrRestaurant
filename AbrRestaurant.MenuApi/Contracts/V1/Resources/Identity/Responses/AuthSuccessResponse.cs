@@ -3,5 +3,10 @@
     public class AuthSuccessResponse
     {
         public string Token { get; set; }
+
+        public AuthSuccessResponse(string token)
+        {
+            Token = token;
+        }
     }
 }
