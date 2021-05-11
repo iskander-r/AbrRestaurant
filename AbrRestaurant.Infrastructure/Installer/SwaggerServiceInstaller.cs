@@ -49,10 +49,16 @@ namespace AbrRestaurant.Infrastructure.Installer
                     }
                 });
 
-                var xmlFile = $"{Assembly.GetEntryAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                try
+                {
+                    var xmlFile = $"{Assembly.GetEntryAssembly().GetName().Name}.xml";
+                    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                    option.IncludeXmlComments(xmlPath);
+                }
+                catch(Exception)
+                {
 
-                option.IncludeXmlComments(xmlPath);
+                }               
             });
 
             serviceCollection.AddSwaggerGenNewtonsoftSupport();

@@ -21,6 +21,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbrRestaurant.MenuApi.IntegrationTests", "AbrRestaurant.MenuApi.IntegrationTests\AbrRestaurant.MenuApi.IntegrationTests.csproj", "{EAE0E4E2-2580-43E0-A6E0-83E25273FDDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbrRestaurant.Infrastructure.UnitTests", "AbrRestaurant.Infrastructure.UnitTests\AbrRestaurant.Infrastructure.UnitTests.csproj", "{EF45845D-37BF-4A4C-BE49-100D18E7EC9F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +47,14 @@ Global
 		{F3ABC5D8-1DA4-4DBB-84C3-6561259A36C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3ABC5D8-1DA4-4DBB-84C3-6561259A36C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3ABC5D8-1DA4-4DBB-84C3-6561259A36C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAE0E4E2-2580-43E0-A6E0-83E25273FDDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAE0E4E2-2580-43E0-A6E0-83E25273FDDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAE0E4E2-2580-43E0-A6E0-83E25273FDDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAE0E4E2-2580-43E0-A6E0-83E25273FDDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF45845D-37BF-4A4C-BE49-100D18E7EC9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF45845D-37BF-4A4C-BE49-100D18E7EC9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF45845D-37BF-4A4C-BE49-100D18E7EC9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF45845D-37BF-4A4C-BE49-100D18E7EC9F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,6 +64,8 @@ Global
 		{C323C364-6A23-4DA4-98CE-DF6410ECB8BE} = {F3E4B130-F8FB-4BEF-A1C4-36E2F298B07F}
 		{236F8587-9E7E-41D5-A0BD-81736D7E53E2} = {F3E4B130-F8FB-4BEF-A1C4-36E2F298B07F}
 		{F3ABC5D8-1DA4-4DBB-84C3-6561259A36C3} = {F3E4B130-F8FB-4BEF-A1C4-36E2F298B07F}
+		{EAE0E4E2-2580-43E0-A6E0-83E25273FDDA} = {18699219-604F-448F-854C-B2032851C794}
+		{EF45845D-37BF-4A4C-BE49-100D18E7EC9F} = {18699219-604F-448F-854C-B2032851C794}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {01A314E8-53F8-4211-941A-349D504EA26C}
