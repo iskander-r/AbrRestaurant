@@ -6,6 +6,6 @@ namespace AbrRestaurant.Infrastructure.Identity
     public class AbrApplicationUser : IdentityUser
     {
         [Required]
-        public int LastSignOutMomentTimestamp { get; set; }
+        public int LastSignOutMomentTimestamp { get; set; } = 0;
     }
 }

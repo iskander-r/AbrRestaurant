@@ -3,6 +3,7 @@ using AbrRestaurant.Infrastructure.Identity;
 using AbrRestaurant.Infrastructure.Options;
 using AbrRestaurant.Infrastructure.Utils;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -32,6 +33,7 @@ namespace AbrRestaurant.Infrastructure.Services
         private readonly UserManager<AbrApplicationUser> _userManager;
         private readonly JwtConfigurationOptions _jwtConfigurationOptions;
         private readonly ICurrentApplicationUserProvider _currentUserProvider;
+
         public IdentityService(
             UserManager<AbrApplicationUser> userManager, 
             JwtConfigurationOptions jwtConfigurationOptions,
@@ -82,7 +84,8 @@ namespace AbrRestaurant.Infrastructure.Services
 
             if (!createdApplicationUser.Succeeded)
                 throw new BadRequestException(
-                    "Произошла ошибка при создании пользователя. Пожалуйста, попробуйте позже.");
+                    "Произошла ошибка при создании пользователя. " +
+                    "Убедитесь, что ваш пароль состоит как минимум из...");
 
             return AuthenticateUser(applicationUser);
         }

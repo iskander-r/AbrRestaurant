@@ -16,5 +16,12 @@ namespace AbrRestaurant.MenuApi.Middlewares
         {
             return builder.UseMiddleware<RequestCurrentUserEnrichedMiddleware>();
         }
+
+
+        public static IApplicationBuilder UseExceptionHandlingMiddleware(
+            this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<ExceptionHandlingMiddleware>();
+        }
     }
 }

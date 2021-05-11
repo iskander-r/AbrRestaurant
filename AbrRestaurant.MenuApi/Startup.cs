@@ -33,6 +33,7 @@ namespace AbrRestaurant.MenuApi
             
             services.InstallServicesFromAssembly(_configuration, installerAssembly);
             InstallMediator(services);
+            InstallMiddlewares(services);
 
             // For developing and testing purposes enabled automatic migrations here. Must be removed later.
             var applicationDbContext = services.BuildServiceProvider()
@@ -53,10 +54,14 @@ namespace AbrRestaurant.MenuApi
         private void InstallMediator(IServiceCollection serviceCollection)
         {
             var applicationAssembly = Assembly.GetAssembly(typeof(IApplicationAssemblyMarker));
-            serviceCollection.AddMediatR(applicationAssembly);
+            serviceCollection.AddMediatR(applicationAssembly);  
+        }
 
+        private void InstallMiddlewares(IServiceCollection serviceCollection)
+        {
             serviceCollection.AddTransient<SignedOutCheckMiddleware>();
             serviceCollection.AddTransient<RequestCurrentUserEnrichedMiddleware>();
+            serviceCollection.AddTransient<ExceptionHandlingMiddleware>();
         }
 
         public void Configure(
@@ -84,14 +89,18 @@ namespace AbrRestaurant.MenuApi
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+
             app.UseSerilogRequestLogging();
+
+            app.UseExceptionHandlingMiddleware();
 
             app.UseAuthentication();
 
             app.UseRouting();
             app.UseAuthorization();
 
-            app.UseRequestCurrentUserEnrichedMiddleware();
+            app.UseRequestCurrentUserEnrichedMiddleware();      
+
             app.UseSignedOutCheckMiddleware();
 
             app.UseEndpoints(endpoints =>

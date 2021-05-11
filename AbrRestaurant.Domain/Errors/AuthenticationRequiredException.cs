@@ -14,5 +14,9 @@
         {
 
         }
+
+        public static AuthenticationRequiredException UserSignedOutTemplate() =>
+            new AuthenticationRequiredException("Ваша сессия была завершена. " +
+                " Пожалуйста, попробуйте повторно пройти процедуру входа в систему.");
     }
 }

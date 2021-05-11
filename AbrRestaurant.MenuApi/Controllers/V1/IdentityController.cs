@@ -6,13 +6,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Threading.Tasks;
 
 namespace AbrRestaurant.MenuApi.Controllers.V1
 {
     [ApiController]
-    [AllowAnonymous]
     public class IdentityController : ControllerBase
     {
         private readonly IIdentityService _identityService;

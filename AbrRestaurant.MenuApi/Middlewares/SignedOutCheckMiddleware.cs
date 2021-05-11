@@ -1,4 +1,5 @@
-﻿using AbrRestaurant.Infrastructure.Identity;
+﻿using AbrRestaurant.Domain.Errors;
+using AbrRestaurant.Infrastructure.Identity;
 using AbrRestaurant.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -39,8 +40,9 @@ namespace AbrRestaurant.MenuApi.Middlewares
             }
 
             var isAuthorizationRequiredEndpoint = 
-                controllerActionDescriptor.MethodInfo.GetCustomAttributes(false)
-                .Any(p => p is AuthorizeAttribute);
+                controllerActionDescriptor.MethodInfo
+                .GetCustomAttributes(false)
+                    .Any(p => p is AuthorizeAttribute);
 
             if (!isAuthorizationRequiredEndpoint)
             {
@@ -48,31 +50,18 @@ namespace AbrRestaurant.MenuApi.Middlewares
                 return;
             }
 
-            if(_currentUser.IsAnonymousUser)
-            {
-                CancelProcessingPipelineAs401(context);
-                return;
-            }
-
             var currentUserFromDb = await _userManager
                 .FindByEmailAsync(_currentUser.Email);
 
-            if(currentUserFromDb.LastSignOutMomentTimestamp != null && 
-                currentUserFromDb.LastSignOutMomentTimestamp > _currentUser.IssuedMoment)
+            if(currentUserFromDb.LastSignOutMomentTimestamp > _currentUser.IssuedMoment)
             {
-                CancelProcessingPipelineAs401(context);
-                return;
+                throw AuthenticationRequiredException.UserSignedOutTemplate();
             }
             else
             {
                 await next.Invoke(context);
                 return;
             }
-        }
-
-        private void CancelProcessingPipelineAs401(HttpContext context)
-        {
-            context.Response.StatusCode = 401;
         }
     }
 }
