@@ -1,11 +1,13 @@
 # AbrRestaurant
 Abr Restaurant Menu API
 
-API для создания заказов в ресторане, поддерживает аутентификацию через JWT Bearer Token (aka ROPC)
-Используется ASP.NET 5, EF 5 и PostgreSQL. Написано с использованием Clean Architecture
+API для создания заказов в ресторане, поддерживает аутентификацию через JWT Bearer Token (aka ROPC).
+Используется ASP.NET 5, EF 5 и PostgreSQL. Написано с использованием Clean Architecture.
+
 
 Полная документация к проекту в виде Swagger Open API доступна по http://localhost:5000/swagger
 Также, при запуске проекта в docker-контейнере поднимется seq-интерфейс для просмотра логов. Он доступен по http://localhost:5340
+
 
 Шаги для запуска и тестирования проекта:
 - Склонировать проект к себе на рабочую машину
