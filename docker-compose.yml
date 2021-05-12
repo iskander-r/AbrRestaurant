@@ -14,6 +14,7 @@ services:
       - "5001:5001"
     depends_on:
       - db-server
+      - seq-interface
     restart: always
     networks:
       - localdev
@@ -26,5 +27,16 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=2348
+    networks:
+      - localdev
+
+  seq-interface:
+    image: datalust/seq:latest
+    container_name: seq_logger
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5340:80"
+      - "5341:5341"
     networks:
       - localdev

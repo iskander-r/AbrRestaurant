@@ -18,7 +18,7 @@ namespace AbrRestaurant.MenuApi
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
                 .WriteTo.Seq(
-                    Environment.GetEnvironmentVariable("SEQ_URL") ?? "http://localhost:5341")
+                    Environment.GetEnvironmentVariable("SEQ_URL") ?? "http://seq_logger:5341")
                 .CreateLogger();
 
             try
