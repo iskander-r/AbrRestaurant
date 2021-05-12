@@ -23,8 +23,8 @@ namespace AbrRestaurant.MenuApi.Contracts.V1.Resources.Menu.Mappers
         public static DeleteMealCommand ToApplicationCommand(this DeleteMenuByIdRequestV1 input) =>
             new DeleteMealCommand(input.Id);
 
-        public static UpdateMealCommand ToApplicationCommand(this PutMenuRequestV1 input) =>
-            new UpdateMealCommand(input.Id, ToApplicationCommand((PostMenuRequestV1) input));
+        public static UpdateMealCommand ToApplicationCommand(this PutMenuRequestV1 input, int id) =>
+            new UpdateMealCommand(id, ToApplicationCommand((PostMenuRequestV1) input));
 
         public static MenuResponseV1 ToOuterContractModel(this CreateMealCommandResponse output) =>
             new MenuResponseV1(

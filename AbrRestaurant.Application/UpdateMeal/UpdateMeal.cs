@@ -77,7 +77,7 @@ namespace AbrRestaurant.Application.UpdateMeal
             var mealToUpdate = await _applicationDbContext.Meals
                 .SingleOrDefaultAsync(p => p.Id == request.Id && !p.IsDeleted);
 
-            if (mealToUpdate != null)
+            if (mealToUpdate == null)
                 throw new ResourceNotFoundException(
                     $"Блюдо с идентификатором {request.Id} не найдено в меню!");
 

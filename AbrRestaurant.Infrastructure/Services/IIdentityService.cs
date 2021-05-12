@@ -140,11 +140,12 @@ namespace AbrRestaurant.Infrastructure.Services
             await _userManager.UpdateAsync(applicationUser);
 
             var email = applicationUser.Email;
+            var currentMoment = DateTime.UtcNow.ToString();
 
             _logger.LogInformation(
                 "Пользователь {email} вышел из системы в {currentMoment}, " +
                 "отозвав все свои токены, выпушенные до {currentMoment}",
-                email, DateTime.UtcNow.ToString());
+                email, currentMoment, currentMoment);
         }
 
         public async Task ChangePasswordAsync(
@@ -165,10 +166,11 @@ namespace AbrRestaurant.Infrastructure.Services
             await SignOutAsync();
 
             string email = currentUser.Email;
+            var currentMoment = DateTime.UtcNow.ToString();
 
             _logger.LogInformation(
                 "Пользователь {email} сменил свой пароль в {currentMoment}",
-                email, DateTime.UtcNow.ToString());
+                email, currentMoment);
         }
 
         public async Task<CurrentUserProfile> GetProfile()

@@ -77,9 +77,9 @@ namespace AbrRestaurant.MenuApi.Controllers.V1
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         public async Task<ActionResult<MenuResponseV1>> Put(
-            [FromBody] PutMenuRequestV1 model)
+            [FromBody] PutMenuRequestV1 model, [FromRoute] int id)
         {
-            var command = model.ToApplicationCommand();
+            var command = model.ToApplicationCommand(id);
             var response = await _mediator.Send(command);
 
             return Ok(response.ToOuterContractModel());
